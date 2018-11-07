@@ -20,8 +20,9 @@ class AbstractHTMLProvider(AbstractProvider):
         for key, value in self.properties.items():
             element, = tree.xpath(value)
             job_dict[key] = ''.join(element.itertext())
-        job = Job(**job_dict)
-        return job
+        if hasattr(self, 'post_process'):
+            job_dict = self.post_process(job_dict)
+        return job_dict
 
     def get_jobs_list(self, entry_url: str) -> Generator:
         content = requests.get(entry_url).content
