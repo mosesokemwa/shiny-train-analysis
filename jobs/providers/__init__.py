@@ -24,4 +24,4 @@ for provider_main in provider_abstract:
         hosts = [host] if type(host) is str else host
         for host in hosts:
             providers[host] = provider()
-            setattr(providers[host], 'post_process', callback)
+            # setattr(providers[host], 'post_process', callback)

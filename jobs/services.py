@@ -11,7 +11,7 @@ class JobsService:
         return self.providers_service.fetch_provider(job)
 
     def fetch_list(self, providers: list) -> JobsList:
-        job_list = JobsList()
+        job_list = []
         for provider in providers:
             job_list.extend(self.fetch_provider(provider))
 
@@ -25,4 +25,3 @@ class ProvidersService:
         host = host[4:] if host.startswith("www.") else host
         jobs = providers[host].fetch(provider)
         return jobs
-

@@ -26,7 +26,7 @@ class IHubProvider(AbstractHTMLProvider):
                 page_buffer.append(self.get_job(job_link))
             except Exception as e:
                 print("Error adding job at %s %s" % (job_link, e))
-
+        print(page_buffer)
         page = 2
         while len(page_buffer) > 0:
             self.jobs.extend(page_buffer)
