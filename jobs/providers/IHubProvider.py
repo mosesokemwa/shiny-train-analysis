@@ -7,12 +7,13 @@ class IHubProvider(AbstractHTMLProvider):
     host = 'ihub.co.ke'
     urls_xpath = '//h3/a'
     properties = {
-        'title': "//div[@class='container-fluid job-article-header']/div/h1",
-        'company': "//div[@class='container-fluid job-article-header']/div[1]/ul/li/a[1]",
+        'job_title': "//div[@class='container-fluid job-article-header']/div/h1",
+        'hiring_organization': "//div[@class='container-fluid job-article-header']/div[1]/ul/li/a[1]",
+        'city': "//div[@class='city-location']",
         'short_desc': "//div[@class='container-fluid job-article-header']/div[1]/ul/li/a[2]",
-        'posted': "//div[@class='container-fluid job-article-header']/div[1]/ul/li/span[1]",
-        'deadline': "//div[@class='container-fluid job-article-header']/div[1]/ul/li/span[2]",
-        'full_desc': "//div[@class='vacancy-description']",
+        'date_posted': "//div[@class='container-fluid job-article-header']/div[1]/ul/li/span[1]",
+        'valid_through': "//div[@class='container-fluid job-article-header']/div[1]/ul/li/span[2]",
+        'description': "//div[@class='vacancy-description']",
         'instructions': "//div[@class='how-to-apply']",
     }
 
@@ -21,7 +22,10 @@ class IHubProvider(AbstractHTMLProvider):
         page_buffer = []
 
         for job_link in self.get_jobs_list(entry_url):
-            page_buffer.append(self.get_job(job_link))
+            try:
+                page_buffer.append(self.get_job(job_link))
+            except Exception as e:
+                print("Error adding job at %s %s" % (job_link, e))
 
         page = 2
         while len(page_buffer) > 0:
@@ -32,7 +36,11 @@ class IHubProvider(AbstractHTMLProvider):
             loop_url = urljoin(entry_url + '/', f'{page}')
 
             for job_link in self.get_jobs_list(loop_url):
-                page_buffer.append(self.get_job(job_link))
+                try:
+                    page_buffer.append(self.get_job(job_link))
+                except Exception as e:
+                    print("Error adding job at %s %s" % (job_link, e))
+
             page += 1
 
         return self.jobs
