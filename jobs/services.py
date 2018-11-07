@@ -2,6 +2,7 @@ from .entities import JobsList
 from urllib.parse import urlparse
 from .providers import providers
 
+
 class JobsService:
     def __init__(self):
         self.providers_service = ProvidersService()
@@ -18,10 +19,10 @@ class JobsService:
 
 
 class ProvidersService:
-
     def fetch_provider(self, provider: str) -> JobsList:
         parsed = urlparse(provider)
         host = parsed.netloc
+        host = host[4:] if host.startswith("www.") else host
         jobs = providers[host].fetch(provider)
         return jobs
 
