@@ -1,6 +1,8 @@
 from jobs.services import JobsService
 from jobs.defaults import StorageHandler
+from jobs.handlers.cleaner_handler import CleanHtmlHandler
 from jobs.handlers.csv_storage_handler import CsvStorageHandler
+from jobs.parser.ParserHandler import ParserHandler
 
 provider_list = [
     "https://www.fuzu.com/categories/it-software",
@@ -16,12 +18,12 @@ provider_list = [
 # jobs_service = JobsService()
 # jobs = jobs_service.fetch_list(provider_list)
 
+cleaner=CleanHtmlHandler()
 # for job_list in jobs:
 #     print("Fetched %s jobs."%len(job_list))
-#     StorageHandler().write(job_list)
+#     StorageHandler().write(cleaner.just_do_it(job_list))
 #     print("Stored %s jobs."%len(job_list))
 
 data=StorageHandler().fetch_all()
-
-CsvStorageHandler().write(data)
-
+new_data=ParserHandler().parse_job_list(data)
+CsvStorageHandler().write(new_data)
