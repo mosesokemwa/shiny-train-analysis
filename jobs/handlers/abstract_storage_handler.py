@@ -1,6 +1,5 @@
 import abc
-from typing import List
-
+from typing import List,Dict
 
 
 class AbstractStorageInterface(abc.ABC):
@@ -9,7 +8,7 @@ class AbstractStorageInterface(abc.ABC):
         pass
 
     @abc.abstractmethod
-    def write(self,data:List) -> bool:
+    def write(self,data:List[Dict]) -> bool:
         pass
 
     @abc.abstractmethod

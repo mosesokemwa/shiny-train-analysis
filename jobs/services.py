@@ -1,6 +1,8 @@
+from typing import Generator
 from .entities import JobsList
 from urllib.parse import urlparse
 from .providers import providers
+
 
 
 class JobsService:
@@ -10,12 +12,10 @@ class JobsService:
     def fetch_provider(self, job: str) -> JobsList:
         return self.providers_service.fetch_provider(job)
 
-    def fetch_list(self, providers: list) -> JobsList:
-        job_list = []
+    def fetch_list(self, providers: list) -> Generator:
         for provider in providers:
-            job_list.extend(self.fetch_provider(provider))
-
-        return job_list
+            prov_jobs = self.fetch_provider(provider)
+            yield prov_jobs
 
 
 class ProvidersService:

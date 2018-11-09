@@ -14,7 +14,6 @@ class AbstractMongoConfig(abc.ABC):
         pass
 
 
-
 class MongoConfig(AbstractMongoConfig):
 
     DATABASE_NAME="jobs"
@@ -23,7 +22,7 @@ class MongoConfig(AbstractMongoConfig):
         pass
 
     def get_database_uri(self,filename:str='database.ini', section:str='mongodb-local', *args, **kwargs) -> str:
-        # mongodb://10.10.10.179:27017/
+        # return "mongodb://127.0.0.1:27017/"
         filename=os.path.join(settings.BASE_DIR, "jobs/handlers/mongodb/"+filename)
         database_uri=os.environ.get('MONGO_DATABASE_URI')
         if database_uri:
@@ -49,5 +48,6 @@ class MongoConfig(AbstractMongoConfig):
                                                                                 db["password"],
                                                                                 db["host"],
                                                                                 self.DATABASE_NAME)
+            print(database_uri)
                                                                             
             return database_uri

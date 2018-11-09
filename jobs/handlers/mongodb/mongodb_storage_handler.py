@@ -10,7 +10,7 @@ class MongoDbStorageHandler(AbstractStorageInterface):
         self.database=self.client["{}".format(mongoconf.DATABASE_NAME)]
 
     def write(self,data:List[Dict]) -> bool:
-        try:    
+        try:
             mongo_col=self.database["jobs_records"]
             d={"student":"ty ty"}
             ids=mongo_col.insert_many(data)
@@ -21,5 +21,11 @@ class MongoDbStorageHandler(AbstractStorageInterface):
             print(e)
             return False
 
-    def read(self):
+    def read(self) -> List[Dict]:
         pass
+
+    def fetch_all(self) -> List[Dict]:
+        try:
+            return [x for x in self.database["jobs_records"].find()]
+        except Exception as e:
+            raise Exception("Execption {}".format(e))
