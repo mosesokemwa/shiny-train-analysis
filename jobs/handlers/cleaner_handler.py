@@ -1,11 +1,12 @@
+from typing import List,Dict
 
-
+import html,re
 
 class CleanHtmlHandler:
     def __init__(self):
         pass
 
-    def just_do_it(self,data):
+    def clean_data(self,data:List[Dict]):
         return list(map(self.clean_fields, data))
 
     def clean_html(self,escaped_html):
@@ -30,5 +31,5 @@ class CleanHtmlHandler:
     def clean_fields(self,dict):
         for k,v in dict.items():
             if type(v) is str:
-                dict[k] = clean_html(v)
+                dict[k] = self.clean_html(v)
         return dict
