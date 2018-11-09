@@ -1,7 +1,7 @@
 from typing import Generator
-from .entities import JobsList
+from jobs.entities import JobsList
 from urllib.parse import urlparse
-from .providers import providers
+from jobs.providers import providers
 
 
 

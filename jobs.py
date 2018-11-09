@@ -1,29 +1,86 @@
+import abc
+import sys
+from typing import List,Dict
 from jobs.services import JobsService
-from jobs.defaults import StorageHandler
+from jobs.defaults import StorageHandler, providers_list
 from jobs.handlers.cleaner_handler import CleanHtmlHandler
 from jobs.handlers.csv_storage_handler import CsvStorageHandler
 from jobs.parser.ParserHandler import ParserHandler
+from jobs.handlers.error_handler import ErrorLogHandler
 
-provider_list = [
-    "https://www.fuzu.com/categories/it-software",
-    "https://www.brightermonday.co.ug/jobs/technology/",
-    "https://www.brightermonday.co.ke/jobs/technology/",
-    "https://www.brightermonday.co.tz/jobs/technology/",
-    "https://www.pigiame.co.ke/it-telecoms-jobs",
-    "https://ihub.co.ke/jobs",
-    # "https://www.careerpointkenya.co.ke/category/ict-jobs-in-kenya/",
-    # "https://jobwebkenya.com/job-category/ittelecom-jobs-in-kenya-2013/",
-]
 
-jobs_service = JobsService()
-jobs = jobs_service.fetch_list(provider_list)
+class AbstractScraper(abc.ABC):
+    def __init__(self, *args, **kwargs):
+        pass
 
-cleaner=CleanHtmlHandler()
-for job_list in jobs:
-    print("Fetched %s jobs."%len(job_list))
-    StorageHandler().write(cleaner.clean_data(job_list))
-    print("Stored %s jobs."%len(job_list))
+    @abc.abstractclassmethod
+    def injectDepencies(cls) -> bool:
+        pass
 
-data=StorageHandler().fetch_all()
-new_data=ParserHandler().parse_job_list(data)
-CsvStorageHandler().write(new_data)
+    @abc.abstractmethod
+    def fetch_and_save(self) -> bool:
+        pass
+
+    def fetch_to_csv(self) -> bool:
+        pass
+
+
+class Scraper(AbstractScraper):
+    def __init__(self, providers_list:List, *args, **kwargs):
+        self.providers_list=providers_list
+
+    @classmethod
+    def injectDepencies(cls,jobs_service=None,
+                            storage_handler=None,
+                            parse_handler=None,
+                            csv_storage_handler=None,
+                            clean_html_handler=None) -> bool:
+        try:
+            cls.jobs_service=jobs_service
+            cls.storage_handler=storage_handler
+            cls.parse_handler=parse_handler
+            cls.csv_storage_handler=csv_storage_handler
+            cls.clean_html_handler=clean_html_handler
+            return True
+
+        except Exception as e:
+            self.logError(sys.exc_info(), e, True)
+            return False
+
+    def fetch_and_save(self) -> bool:
+        try:
+            jobs = self.jobs_service.fetch_list(self.providers_list)
+            for job_list in jobs:
+                print("Fetched %s jobs."%len(job_list))
+                self.storage_handler.write( self.clean_html_handler.clean_data(job_list))
+                print("Stored %s jobs."%len(job_list))
+            return True
+
+        except Exception as e:
+            self.logError(sys.exc_info(), e, True)
+            return False
+            
+    def fetch_to_csv(self) -> bool:
+        try:
+            jobs=self.storage_handler.fetch_all()
+            parsed_data=self.parse_handler.parse_job_list(jobs)
+            self.csv_storage_handler.write(parsed_data)
+            return True
+        except Exception as e:
+            self.logError(sys.exc_info(), e, True)
+            return False
+
+
+
+
+Scraper.injectDepencies(
+    jobs_service=JobsService(),
+    storage_handler=StorageHandler(),
+    parse_handler=ParserHandler(),
+    csv_storage_handler=CsvStorageHandler(),
+    clean_html_handler=CleanHtmlHandler()
+)
+
+scraper=Scraper(providers_list)
+# scraper.fetch_and_save()
+scraper.fetch_to_csv()
