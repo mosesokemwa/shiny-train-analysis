@@ -6,15 +6,14 @@ from jobs.handlers.mongodb.config import MongoConfig
 class MongoDbStorageHandler(AbstractStorageInterface):
 
     def __init__(self, mongoconf=MongoConfig(), *args, **kwargs):
+        self.mongo_config=mongoconf
         self.client=MongoClient(mongoconf.get_database_uri())
-        self.database=self.client["{}".format(mongoconf.DATABASE_NAME)]
+        self.database=self.client[mongoconf.DATABASE_NAME]
 
     def write(self,data:List[Dict]) -> bool:
         try:
-            mongo_col=self.database["jobs_records"]
-            d={"student":"ty ty"}
+            mongo_col=self.database[self.mongo_config.COLUMN]
             ids=mongo_col.insert_many(data)
-            print(ids.inserted_ids)
             return True
 
         except Exception as e:

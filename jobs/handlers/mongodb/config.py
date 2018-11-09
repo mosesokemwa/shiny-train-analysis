@@ -17,6 +17,7 @@ class AbstractMongoConfig(abc.ABC):
 class MongoConfig(AbstractMongoConfig):
 
     DATABASE_NAME="jobs"
+    COLUMN="jobs_column"
 
     def __init__(self, *args, **kwargs):
         pass
@@ -48,6 +49,5 @@ class MongoConfig(AbstractMongoConfig):
                                                                                 db["password"],
                                                                                 db["host"],
                                                                                 self.DATABASE_NAME)
-            print(database_uri)
                                                                             
             return database_uri
