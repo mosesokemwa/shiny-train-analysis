@@ -1,14 +1,16 @@
 import csv
 import os
+import sys
 from typing import List,Dict
 from jobs.handlers.abstract_storage_handler import AbstractStorageInterface
 from jobs import settings
+from jobs.handlers.error_handler import ErrorLogHandler
 
 
 class CsvConfig:
     pass
 
-class CsvStorageHandler(AbstractStorageInterface):
+class CsvStorageHandler(AbstractStorageInterface,ErrorLogHandler):
 
     def __init__(self, *args, **kwargs):
         self.FIELDS=["id","job_title","city","hiring_organization","employment_type","months","date_posted","tags"]
@@ -25,7 +27,8 @@ class CsvStorageHandler(AbstractStorageInterface):
                 dict_writer.writerows(x)
             return True
         except Exception as e:
-            raise Exception("{}".format(e))
+            self.logError(sys.exc_info(), e, True)
+            return False
 
     def read(self,id:int=0):
         pass

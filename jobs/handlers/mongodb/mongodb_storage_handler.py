@@ -1,9 +1,11 @@
+import sys
 from typing import List,Dict
 from pymongo import MongoClient
 from jobs.handlers.abstract_storage_handler import AbstractStorageInterface
 from jobs.handlers.mongodb.config import MongoConfig
+from jobs.handlers.error_handler import ErrorLogHandler
 
-class MongoDbStorageHandler(AbstractStorageInterface):
+class MongoDbStorageHandler(AbstractStorageInterface,ErrorLogHandler):
 
     def __init__(self, mongoconf=MongoConfig(), *args, **kwargs):
         self.mongo_config=mongoconf
@@ -25,6 +27,7 @@ class MongoDbStorageHandler(AbstractStorageInterface):
 
     def fetch_all(self) -> List[Dict]:
         try:
-            return [x for x in self.database["jobs_records"].find()]
+            return [x for x in self.database[self.mongo_config.COLUMN].find()]
         except Exception as e:
-            raise Exception("Execption {}".format(e))
+            self.logError(sys.exc_info(), e, True)
+            return [{}]
