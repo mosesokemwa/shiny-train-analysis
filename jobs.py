@@ -25,7 +25,7 @@ class AbstractScraper(abc.ABC):
         pass
 
 
-class Scraper(AbstractScraper):
+class Scraper(AbstractScraper,ErrorLogHandler):
     def __init__(self, providers_list:List, *args, **kwargs):
         self.providers_list=providers_list
 
@@ -44,7 +44,7 @@ class Scraper(AbstractScraper):
             return True
 
         except Exception as e:
-            self.logError(sys.exc_info(), e, True)
+            ErrorLogHandler().logError(sys.exc_info(), e, True)
             return False
 
     def fetch_and_save(self) -> bool:
