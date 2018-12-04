@@ -1,3 +1,5 @@
+from datetime import datetime
+import pytz
 from jobs.entities import JobsList
 from .AbstractTokenProvider import AbstractTokenProvider
 
@@ -5,6 +7,7 @@ from .AbstractTokenProvider import AbstractTokenProvider
 class PigiaMeProvider(AbstractTokenProvider):
     pagination = 'page'
     host = 'pigiame.co.ke'
+    timezone = pytz.timezone('Africa/Nairobi')
 
     def fetch(self, entry_url: str) -> JobsList:
         self.jobs = JobsList()
@@ -29,3 +32,14 @@ class PigiaMeProvider(AbstractTokenProvider):
             page += 1
 
         return self.jobs
+
+    def post_process(self, job):
+        # you can do field standardization here
+        # Glassdoor gives date in this format '2018-12-11', we need a timestamp
+        posted = datetime.strptime(job["date_posted"], "%Y-%m-%d")
+        posted = self.timezone.localize(posted)
+        job["date_posted"] = str(posted)
+        posted = datetime.strptime(job["valid_through"], "%Y-%m-%d")
+        posted = self.timezone.localize(posted)
+        job["valid_through"] = str(posted)
+        return job

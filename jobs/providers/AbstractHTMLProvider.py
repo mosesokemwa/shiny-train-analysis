@@ -3,7 +3,7 @@ import requests
 from lxml.html import fromstring
 from jobs.entities import Job
 from typing import Generator
-from urllib.parse import urljoin
+from urllib.parse import urljoin, urlparse
 from .AbstractProvider import AbstractProvider
 
 
@@ -20,6 +20,7 @@ class AbstractHTMLProvider(AbstractProvider):
         for key, value in self.properties.items():
             element, = tree.xpath(value)
             job_dict[key] = ''.join(element.itertext())
+        job_dict["source"] = urlparse(job_url).netloc
         if hasattr(self, 'post_process'):
             job_dict = self.post_process(job_dict)
         return job_dict

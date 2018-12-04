@@ -1,5 +1,7 @@
 import abc
 import json
+from urllib.parse import urlparse
+from ..defaults import country_mapping
 import requests
 from lxml.html import fromstring
 from jobs.entities import Job
@@ -9,9 +11,9 @@ from .AbstractProvider import AbstractProvider
 
 
 class AbstractTokenProvider(AbstractProvider):
+    headers = {}
 
-    def get_job(self, job_url: str) -> dict:
-        content = requests.get(job_url).content
+    def parse_job_from_content(self, content: bytes, job_url: str) -> dict:
         tree = fromstring(content.decode())
         matches = tree.xpath('//script[@type="application/ld+json"]')
         for match in matches:
@@ -20,11 +22,21 @@ class AbstractTokenProvider(AbstractProvider):
             element = json.loads(text.strip())
             if type(element) is dict and element["@type"] == 'JobPosting':
                 org = element.get("hiringOrganization", {})
+                country = None
+                address = element.get("jobLocation", {}).get("address")
+                if address:
+                    if address["@type"] == "PostalAddress":
+                        country = address.get("addressCountry")
+                        if type(country) is dict:
+                            country = country.get("name")
+                        country = country_mapping.get(country)
+                    else:
+                        print(address)
                 job_dict = {
                     "job_title": element.get("title"),
                     "hiring_organization": org if type(org) is str else org.get("name"),
                     "city": element.get("jobLocation", {}).get("address", {}).get("addressLocality"),
-                    "country": element.get("jobLocation", {}).get("address", {}).get("addressRegion"),
+                    "country": country,
                     "employment_type": element.get("employmentType"),
                     "education_requirements": element.get("educationRequirements"),
                     "qualifications": element.get("qualifications"),
@@ -40,14 +52,14 @@ class AbstractTokenProvider(AbstractProvider):
                     "max_value": element.get("estimatedSalary"),
                     "value_period": None,
                     "instructions": None,
+                    "source": urlparse(job_url).netloc,
                 }
                 if hasattr(self, 'post_process'):
                     job_dict = self.post_process(job_dict)
                 return job_dict
-        return {}
+        raise Exception("\nNo Job Found on Page")
 
-    def get_jobs_list(self, entry_url: str) -> Generator:
-        content = requests.get(entry_url).content
+    def get_urls_from_content(self, content: bytes) -> Generator:
         tree = fromstring(content.decode())
         matches = tree.xpath('//script[@type="application/ld+json"]')
         for match in matches:
@@ -61,9 +73,18 @@ class AbstractTokenProvider(AbstractProvider):
                     elif "item" in child_element:
                         yield child_element.get("item").get("url")
                     else:
-                        # get confused
+                        # list item has no url :-(
                         pass
             else:
-                # also get confused
+                # item is not a list :-(
                 pass
+
+    def get_job(self, job_url: str) -> dict:
+        content = requests.get(job_url, headers=self.headers).content
+        return self.parse_job_from_content(content, job_url)
+
+    def get_jobs_list(self, entry_url: str) -> Generator:
+        content = requests.get(entry_url, headers=self.headers).content
+        yield from self.get_urls_from_content(content)
+
 
