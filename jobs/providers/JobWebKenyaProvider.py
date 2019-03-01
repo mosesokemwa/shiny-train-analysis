@@ -20,6 +20,7 @@ class JobWebKenyaProvider(AbstractHTMLProvider):
     }
 
     def fetch(self, entry_url: str) -> JobsList:
+        print("Warning JobWebKenya is in beta support! Expect Errors!")
         self.jobs = JobsList()
         page_buffer = []
 

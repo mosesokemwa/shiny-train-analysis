@@ -13,7 +13,7 @@ class CsvConfig:
 class CsvStorageHandler(AbstractStorageInterface,ErrorLogHandler):
 
     def __init__(self, *args, **kwargs):
-        self.FIELDS=["id","job_title","city","hiring_organization","employment_type","months","date_posted","tags"]
+        self.FIELDS=["id","job_title","city","hiring_organization","employment_type","months","date_posted","tags","source"]
 
 
     def write(self,data:List[Dict]) -> bool:

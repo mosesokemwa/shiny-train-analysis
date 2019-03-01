@@ -1,3 +1,5 @@
+from datetime import datetime
+import pytz
 from jobs.entities import JobsList
 from .AbstractTokenProvider import AbstractTokenProvider
 
@@ -5,6 +7,7 @@ from .AbstractTokenProvider import AbstractTokenProvider
 class BrighterMondayProvider(AbstractTokenProvider):
     pagination = 'page'
     host = ['brightermonday.co.ke', 'brightermonday.co.ug', 'brightermonday.co.tz']
+    timezone = pytz.timezone("Africa/Nairobi")
 
     def fetch(self, entry_url: str) -> JobsList:
         self.jobs = JobsList()

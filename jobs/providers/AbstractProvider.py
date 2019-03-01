@@ -1,6 +1,5 @@
 import abc
-from typing import List
 
 
-class AbstractProvider:
+class AbstractProvider(abc.ABC):
     pass

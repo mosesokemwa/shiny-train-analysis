@@ -1,5 +1,6 @@
+from datetime import datetime
 from urllib.parse import urljoin
-
+import pytz
 from jobs.entities import JobsList
 from .AbstractTokenProvider import AbstractTokenProvider
 from .AbstractHTMLProvider import AbstractHTMLProvider
@@ -10,6 +11,7 @@ class CareerPointProvider(AbstractHTMLProvider, AbstractTokenProvider):
     host = 'careerpointkenya.co.ke'
     properties = None
     urls_xpath = '//header/h2/a'
+    timezone = pytz.timezone("Africa/Nairobi")
 
     def fetch(self, entry_url: str) -> JobsList:
         self.jobs = JobsList()
@@ -20,8 +22,6 @@ class CareerPointProvider(AbstractHTMLProvider, AbstractTokenProvider):
                 page_buffer.append(AbstractTokenProvider.get_job(self, job_link))
             except Exception as e:
                 print("Error adding job at %s %s" % (job_link, e))
-
-
         page = 2
         while page_buffer:
             self.jobs.extend(page_buffer)
@@ -36,3 +36,11 @@ class CareerPointProvider(AbstractHTMLProvider, AbstractTokenProvider):
             page += 1
 
         return self.jobs
+
+    def post_process(self, job):
+        # I am in charge of standardizing fields across job objects
+        # Fuzu's validthrough timestamp is ok but dateposted is not
+        posted = datetime.strptime(job["date_posted"], "%Y-%m-%d")
+        posted = self.timezone.localize(posted)
+        job["date_posted"] = str(posted)
+        return job
