@@ -1,21 +1,14 @@
+from datetime import datetime
+import pytz
 from jobs.entities import JobsList
 from .AbstractTokenProvider import AbstractTokenProvider
-from jobs.services.scraper.parser.BrighterMondayParser import BrighterMondayParser
 
 
 class BrighterMondayProvider(AbstractTokenProvider):
     pagination = 'page'
     host = ['brightermonday.co.ke', 'brightermonday.co.ug', 'brightermonday.co.tz']
+    timezone = pytz.timezone("Africa/Nairobi")
 
-    parser=BrighterMondayParser()
-
-
-    def get_parser(self):
-        return self.parser
-
-    def set_parser(self,parser):
-        self.parser=parser
-        
     def fetch(self, entry_url: str) -> JobsList:
         self.jobs = JobsList()
         page_buffer = []

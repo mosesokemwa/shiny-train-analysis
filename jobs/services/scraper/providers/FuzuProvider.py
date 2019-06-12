@@ -1,18 +1,16 @@
+from datetime import datetime
+
+import pytz
+
 from jobs.entities import JobsList
 from .AbstractTokenProvider import AbstractTokenProvider
 from urllib.parse import urlparse, urljoin
-from jobs.services.scraper.parser.FuzuParser import FuzuJobsParser
+
 
 class FuzuProvider(AbstractTokenProvider):
     pagination = 'page'
     host = 'fuzu.com'
-    parser=FuzuJobsParser()
-
-    def set_parser(self,parser):
-        self.parser=parser
-
-    def get_parser(self):
-        return self.parser
+    timezone = pytz.timezone("Africa/Nairobi")
 
     def fetch(self, entry_url: str) -> JobsList:
         self.jobs = JobsList()
@@ -42,3 +40,11 @@ class FuzuProvider(AbstractTokenProvider):
             page += 1
 
         return self.jobs
+
+    def post_process(self, job):
+        # I am in charge of standardizing fields across job objects
+        # Fuzu's validthrough timestamp is ok but dateposted is not
+        posted = datetime.strptime(job["date_posted"], "%Y-%m-%d")
+        posted = self.timezone.localize(posted)
+        job["date_posted"] = str(posted)
+        return job
