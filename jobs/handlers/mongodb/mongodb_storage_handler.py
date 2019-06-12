@@ -19,7 +19,7 @@ class MongoDbStorageHandler(AbstractStorageInterface,ErrorLogHandler):
             return True
 
         except Exception as e:
-            print(e)
+            self.logError(sys.exc_info(), e, True)
             return False
 
     def read(self) -> List[Dict]:

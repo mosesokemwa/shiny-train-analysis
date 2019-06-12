@@ -17,7 +17,7 @@ class AbstractMongoConfig(abc.ABC):
 class MongoConfig(AbstractMongoConfig):
 
     DATABASE_NAME="jobs"
-    COLUMN="jobs_column"
+    COLUMN="jobs_column3"
 
     def __init__(self, *args, **kwargs):
         pass

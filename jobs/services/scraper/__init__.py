@@ -1,4 +1,4 @@
-providers_list = {
+default_providers_list = {
     
     "fuzu-it-software":"https://www.fuzu.com/categories/it-software",
     "brightermonday-ug":"https://www.brightermonday.co.ug/jobs/technology/",

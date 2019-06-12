@@ -1,7 +1,7 @@
 from urllib.parse import urljoin
 from jobs.entities import JobsList
 from .AbstractHTMLProvider import AbstractHTMLProvider
-
+from jobs.services.scraper.parser.IhubParser import IhubParser
 
 class IHubProvider(AbstractHTMLProvider):
     host = 'ihub.co.ke'
@@ -16,6 +16,13 @@ class IHubProvider(AbstractHTMLProvider):
         'description': "//div[@class='vacancy-description']",
         'instructions': "//div[@class='how-to-apply']",
     }
+    parser=IhubParser()
+
+    def set_parser(self,parser):
+        self.parser=parser
+
+    def get_parser(self):
+        return self.parser
 
     def fetch(self, entry_url: str) -> JobsList:
         self.jobs = JobsList()
