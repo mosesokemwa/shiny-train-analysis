@@ -1,4 +1,6 @@
 import abc
 
 class AbstractProvider(abc.ABC):
-    pass
+    
+    def get_parser(self):
+        return False

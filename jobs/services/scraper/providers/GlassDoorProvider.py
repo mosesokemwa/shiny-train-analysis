@@ -3,9 +3,18 @@ from urllib.parse import urljoin
 from datetime import datetime
 import pytz
 from lxml.html import fromstring
-import requests
 from jobs.entities import JobsList
 from .AbstractTokenProvider import AbstractTokenProvider
+
+import requests
+from requests.adapters import HTTPAdapter
+from requests.packages.urllib3.util.retry import Retry
+
+session = requests.Session()
+retry = Retry(connect=3, backoff_factor=0.5)
+adapter = HTTPAdapter(max_retries=retry)
+session.mount('http://', adapter)
+session.mount('https://', adapter)
 
 
 class GlassDoorProvider(AbstractTokenProvider):
@@ -21,7 +30,7 @@ class GlassDoorProvider(AbstractTokenProvider):
         self.jobs = JobsList()
         next_url = entry_url
         while next_url:
-            content = requests.get(next_url, headers=self.headers).content
+            content = session.get(next_url, headers=self.headers).content
             for job_url in self.get_urls_from_content(content):
                 print(job_url)
                 try:

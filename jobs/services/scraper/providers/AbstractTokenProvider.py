@@ -2,12 +2,21 @@ import abc
 import json
 from urllib.parse import urlparse
 from jobs.services.scraper import country_mapping
-import requests
 from lxml.html import fromstring
 from jobs.entities import Job
 from typing import Generator
 import re
 from .AbstractProvider import AbstractProvider
+
+import requests
+from requests.adapters import HTTPAdapter
+from requests.packages.urllib3.util.retry import Retry
+
+session = requests.Session()
+retry = Retry(connect=3, backoff_factor=0.5)
+adapter = HTTPAdapter(max_retries=retry)
+session.mount('http://', adapter)
+session.mount('https://', adapter)
 
 
 class AbstractTokenProvider(AbstractProvider):
@@ -80,9 +89,9 @@ class AbstractTokenProvider(AbstractProvider):
                 pass
 
     def get_job(self, job_url: str) -> dict:
-        content = requests.get(job_url, headers=self.headers).content
+        content = session.get(job_url, headers=self.headers).content
         return self.parse_job_from_content(content, job_url)
 
     def get_jobs_list(self, entry_url: str) -> Generator:
-        content = requests.get(entry_url, headers=self.headers).content
+        content = session.get(entry_url, headers=self.headers).content
         yield from self.get_urls_from_content(content)

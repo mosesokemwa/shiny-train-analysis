@@ -41,12 +41,19 @@ class Scraper(AbstractScraper):
 
     def parse(self,host,jobs_list):
         parser=self.providers[host].get_parser()
-        return parser.parse_job_list(jobs_list)
+        if parser:
+            return parser.parse_job_list(jobs_list)
+        return jobs_list
 
     def parse_many(self,jobs_dict):
-        results={}
-        for host,jobs in jobs_dict.items():
-            results[host]=self.parse(host,jobs)
+        results=[]
+        for i in jobs_dict:
+     
+            r=self.parse(i[0],i[1])
+            if r:
+                results.append((i[0],r,i[2]))
+            else:
+                results.append(i)
         return results
 
     def store(self,jobs_list):
