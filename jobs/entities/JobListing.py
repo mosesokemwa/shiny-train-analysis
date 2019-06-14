@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.postgres.fields import ArrayField, JSONField
 
 class JobListing(models.Model):
-    name=models.CharField(max_length=255, unique=True)
+    name=models.CharField(max_length=255, unique=True,null=True)
     company=models.ForeignKey('jobs.Company',related_name="company_jobs", on_delete=models.SET_NULL,null=True)
     provider=models.ForeignKey('jobs.Providers',related_name="provder_jobs", on_delete=models.SET_NULL,null=True)
     description=models.TextField(null=True)
