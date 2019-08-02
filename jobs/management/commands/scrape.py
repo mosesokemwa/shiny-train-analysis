@@ -9,10 +9,10 @@ postgres_db_handler=PostgresDBHandler()
 
 class Command(BaseCommand):
     service=Scraper()
-    help = 'Add odds providers to DB'
+    help = 'Run the scraper.'
 
     def add_arguments(self, parser):
-        parser.add_argument("url",type=str,help="url to scrape")
+        parser.add_argument("url",type=str,help="url to scrape. provide 'defaults' for all.")
 
     def validate_url(self,url):
         return True
@@ -28,6 +28,4 @@ class Command(BaseCommand):
                     self.service.store_to_json(d[2],d[1])
                     self.service.store_to_csv(d[2],d[1])
                     self.stdout.write(self.style.SUCCESS("Adding {}".format(d[0])))
-            return 
-    
-                
+            return
