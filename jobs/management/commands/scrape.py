@@ -9,10 +9,10 @@ postgres_db_handler=PostgresDBHandler()
 
 class Command(BaseCommand):
     service=Scraper()
-    help = 'Add odds providers to DB'
+    help = 'Run the scraper.'
 
     def add_arguments(self, parser):
-        parser.add_argument("url",type=str,help="url to scrape")
+        parser.add_argument("url",type=str,help="url to scrape. provide 'defaults' for all.")
 
     def validate_url(self,url):
         return True
@@ -31,5 +31,4 @@ class Command(BaseCommand):
                         j.name=d[1]["job_title"]
                     j.save()
                     self.stdout.write(self.style.SUCCESS("Adding {}".format(d[0])))
-            return 
-                
+            return
