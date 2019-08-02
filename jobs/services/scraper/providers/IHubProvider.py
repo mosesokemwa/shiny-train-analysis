@@ -67,8 +67,4 @@ class IHubProvider(AbstractHTMLProvider):
             "responsibilities": None, "value_currency": None,
             "min_value": None, "max_value": None,
         })
-<<<<<<< HEAD:jobs/services/scraper/providers/IHubProvider.py
         return job
-=======
-        return job
->>>>>>> 2f26ec42b24a756f769222e9933c1e0b25aea7b0:jobs/providers/IHubProvider.py
