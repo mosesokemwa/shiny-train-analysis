@@ -9,6 +9,7 @@ from jobs.handlers.cleaner_handler import CleanHtmlHandler
 from jobs.handlers.csv_storage_handler import CsvStorageHandler
 from jobs.handlers.error_handler import ErrorLogHandler
 from jobs.handlers.postgres import PostgresDBHandler
+from jobs.entities.JobListing import JobListing
 
 
 class Scraper(AbstractScraper):
@@ -48,7 +49,6 @@ class Scraper(AbstractScraper):
     def parse_many(self,jobs_dict):
         results=[]
         for i in jobs_dict:
-     
             r=self.parse(i[0],i[1])
             if r:
                 results.append((i[0],r,i[2]))
@@ -62,12 +62,13 @@ class Scraper(AbstractScraper):
     def store_to_db(self,jobs_list):
         return True
 
-    def store_to_csv(self, host, jobs_list):
-        self.csv_storage_handler.write(jobs_list)
-        return True
+    def store_to_csv(self,url,data):
+        name=urlparse(url).netloc.replace(".com","").replace("www.","")
+        path=BASE_DIR+"/fixtures/{}.csv".format(name)
+        return self.csv_storage_handler.write(path,data)
 
     def store_to_json(self,url,data):
-        name=urlparse(url).netloc.replace(".com","").replace("www.","")
+        name=urlparse(url).netloc.replace("www.","")
         with open(BASE_DIR+"/fixtures/{}.json".format(name),"w") as infile:
             json.dump(data,infile)
         return True

@@ -13,12 +13,11 @@ class CsvConfig:
 class CsvStorageHandler(AbstractStorageInterface,ErrorLogHandler):
 
     def __init__(self, *args, **kwargs):
-        self.FIELDS=["id","job_title","city","hiring_organization","employment_type","months","date_posted","tags","source"]
+        self.FIELDS=["id","job_title","city","hiring_organization","employment_type","months","date_posted","valid_through","tags","source"]
 
 
-    def write(self,data:List[Dict]) -> bool:
+    def write(self,file_path,data:List[Dict]) -> bool:
         try:
-            file_path = os.path.join(settings.BASE_DIR,"fixtures/jobs.csv")
             k=[i for i in data[0].keys() if i in self.FIELDS]
             x = [{f:v for f,v in element.items() if f in k} for element in data]
             with open(file_path,'w') as csvfile:

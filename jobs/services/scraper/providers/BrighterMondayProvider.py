@@ -18,7 +18,6 @@ class BrighterMondayProvider(AbstractTokenProvider):
                 page_buffer.append(self.get_job(job_link))
             except Exception as e:
                 print("Error adding job at %s %s" % (job_link, e))
-
         page = 2
         while page_buffer:
             self.jobs.extend(page_buffer)
@@ -30,5 +29,4 @@ class BrighterMondayProvider(AbstractTokenProvider):
                 except Exception as e:
                     print("Error adding job at %s %s" % (job_link, e))
             page += 1
-
         return self.jobs

@@ -17,7 +17,9 @@ class FuzuProvider(AbstractTokenProvider):
         page_buffer = []
         scheme_host = urlparse(entry_url)
         scheme_host = scheme_host.scheme + '://' + scheme_host.netloc
-        for job_link in self.get_jobs_list(entry_url):
+
+        intial_page_links=[job_link for job_link in self.get_jobs_list(entry_url)]
+        for job_link in intial_page_links:
             job_path = urlparse(job_link).path
             job_link = urljoin(scheme_host, job_path)
             try:
@@ -30,15 +32,18 @@ class FuzuProvider(AbstractTokenProvider):
             self.jobs.extend(page_buffer)
             page_buffer = []
             loop_url = f'{entry_url}?{self.pagination}={page}'
-            for job_link in self.get_jobs_list(loop_url):
+            current_page_links=[job_link for job_link in self.get_jobs_list(loop_url)]
+            if current_page_links==intial_page_links:
+                break
+            for job_link in current_page_links:
                 job_path = urlparse(job_link).path
                 job_link = urljoin(scheme_host, job_path)
                 try:
                     page_buffer.append(self.get_job(job_link))
                 except Exception as e:
                     print("Error adding job at %s %s" % (job_link, e))
+            intial_page_links=current_page_links
             page += 1
-
         return self.jobs
 
     def post_process(self, job):

@@ -26,10 +26,8 @@ class Command(BaseCommand):
             if data:
                 for d in data:
                     self.service.store_to_json(d[2],d[1])
-                    j=JobListing(meta=d[1])
-                    if "job_title" in list(d[1].keys()):
-                        j.name=d[1]["job_title"]
-                    j.save()
+                    self.service.store_to_csv(d[2],d[1])
                     self.stdout.write(self.style.SUCCESS("Adding {}".format(d[0])))
             return 
+    
                 

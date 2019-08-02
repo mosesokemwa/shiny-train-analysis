@@ -71,27 +71,38 @@ class AbstractTokenProvider(AbstractProvider):
     def get_urls_from_content(self, content: bytes) -> Generator:
         tree = fromstring(content.decode())
         matches = tree.xpath('//script[@type="application/ld+json"]')
+        found_urls=[]
+        repeat=False
         for match in matches:
+            if repeat:break
             text = re.sub(r'\s+', ' ', match.text)
             text = re.sub(r',\s*(?=[}\]])', '', text)
             element = json.loads(text)
             if type(element) is dict and element["@type"] == 'ItemList':
                 for child_element in element.get("itemListElement", []):
                     if "url" in child_element:
-                        yield child_element.get("url")
+                        url=child_element.get("url")
                     elif "item" in child_element:
-                        yield child_element.get("item").get("url")
+                        url=child_element.get("item").get("url")
                     else:
                         # list item has no url :-(
                         pass
+                    # if url in found_urls:
+                    #     print("REPEAT")
+                    #     repeat=True
+                    #     break
+                    found_urls.append(url)
+                    yield url
             else:
                 # item is not a list :-(
                 pass
 
     def get_job(self, job_url: str) -> dict:
+        print("Fetching Job: {}".format(job_url))
         content = session.get(job_url, headers=self.headers).content
         return self.parse_job_from_content(content, job_url)
 
     def get_jobs_list(self, entry_url: str) -> Generator:
+        print("Fetching Jobs List: {}".format(entry_url))
         content = session.get(entry_url, headers=self.headers).content
         yield from self.get_urls_from_content(content)
