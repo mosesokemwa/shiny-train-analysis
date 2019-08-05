@@ -10,6 +10,7 @@ from jobs.handlers.csv_storage_handler import CsvStorageHandler
 from jobs.handlers.error_handler import ErrorLogHandler
 from jobs.handlers.postgres import PostgresDBHandler
 from jobs.entities.JobListing import JobListing
+from threading import Thread
 
 
 class Scraper(AbstractScraper):
@@ -85,3 +86,43 @@ class Scraper(AbstractScraper):
 
 
 
+from queue import Queue
+
+class UrlQueue(Queue):
+    def __init__(self):
+        Queue.__init__(self)
+
+class DataQueue(Queue):
+    def __init__(self):
+        Queue.__init__(self)
+
+
+class AsyncScraper(Scraper):
+    
+    def __init__(self,*args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.url_queue=UrlQueue()
+        self.data_queue=DataQueue()
+        self.NUM_THREADS=5
+        self.results=[]
+    
+    def async_fetch(self):
+        while True:
+            url =self.url_queue.get()
+            data=self.fetch(url)
+            if data:
+                self.data_queue.put(data)
+            self.url_queue.task_done()
+    
+    def fetch_providers_urls(self):
+        for name,url in self.provider_urls.items():
+            self.url_queue.put(url)
+        
+        for i in range(self.NUM_THREADS):
+            t= Thread(target=self.async_fetch)
+            t.daemon=True
+            t.start()
+        self.url_queue.join()
+        results=list(self.data_queue.queue)
+        return results
+    

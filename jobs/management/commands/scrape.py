@@ -2,13 +2,13 @@ from django.core.management.base import BaseCommand
 from django.conf import settings
 import os,json
 from jobs.handlers.postgres import PostgresDBHandler
-from jobs.services.scraper.scraper import Scraper
+from jobs.services.scraper.scraper import Scraper, AsyncScraper
 from jobs.entities.JobListing import JobListing
 
 postgres_db_handler=PostgresDBHandler()
 
 class Command(BaseCommand):
-    service=Scraper()
+    service=AsyncScraper()
     help = 'Run the scraper.'
 
     def add_arguments(self, parser):
