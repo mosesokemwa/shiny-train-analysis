@@ -1,12 +1,12 @@
 from django.db import models
 from django.contrib.postgres.fields import ArrayField, JSONField
 
-class Providers(models.Model):
+class Provider(models.Model):
     name=models.CharField(max_length=255, unique=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    inserted_at = models.DateTimeField(auto_now=True)
-    meta = JSONField(blank=True, default=dict)
-
+    hosts=ArrayField(
+        models.CharField(max_length=255)
+    )
+    
     class Meta:
         db_table="providers"
         verbose_name_plural ="Providers"

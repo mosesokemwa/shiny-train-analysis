@@ -3,7 +3,7 @@ from django.conf import settings
 import os,json
 from jobs.handlers.postgres import PostgresDBHandler
 from jobs.services.scraper.scraper import Scraper, AsyncScraper
-from jobs.entities.JobListing import JobListing
+from jobs.models.JobListing import JobListing
 
 postgres_db_handler=PostgresDBHandler()
 

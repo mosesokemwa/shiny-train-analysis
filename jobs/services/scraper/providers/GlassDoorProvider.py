@@ -3,7 +3,7 @@ from urllib.parse import urljoin
 from datetime import datetime
 import pytz
 from lxml.html import fromstring
-from jobs.entities import JobsList
+from jobs.models import JobsList
 from .AbstractTokenProvider import AbstractTokenProvider
 
 import requests

@@ -1,7 +1,7 @@
 from datetime import datetime
 from urllib.parse import urljoin
 import pytz
-from jobs.entities import JobsList
+from jobs.models import JobsList
 from .AbstractTokenProvider import AbstractTokenProvider
 from .AbstractHTMLProvider import AbstractHTMLProvider
 

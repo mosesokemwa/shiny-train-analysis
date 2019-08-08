@@ -1,5 +1,5 @@
 from requests import PreparedRequest
-from jobs.entities import JobsList
+from jobs.models import JobsList
 from jobs.services.scraper.providers.AbstractTokenProvider import AbstractTokenProvider
 from .AbstractHTMLProvider import AbstractHTMLProvider
 
