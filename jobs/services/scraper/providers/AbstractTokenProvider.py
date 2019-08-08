@@ -3,7 +3,7 @@ import json
 from urllib.parse import urlparse
 from jobs.services.scraper import country_mapping
 from lxml.html import fromstring
-from jobs.entities import Job
+from jobs.models import Job
 from typing import Generator
 import re
 from .AbstractProvider import AbstractProvider

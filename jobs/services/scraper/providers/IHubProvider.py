@@ -1,5 +1,5 @@
 from urllib.parse import urljoin
-from jobs.entities import JobsList
+from jobs.models import JobsList
 from .AbstractHTMLProvider import AbstractHTMLProvider
 from datetime import datetime
 from jobs.services.scraper import country_mapping
@@ -19,6 +19,20 @@ class IHubProvider(AbstractHTMLProvider):
         'valid_through': "//div[@class='container-fluid job-article-header']/div[1]/ul/li/span[2]",
         'description': "//div[@class='vacancy-description']",
         'instructions': "//div[@class='how-to-apply']",
+        "country": None,
+        "education_requirements": None,
+        "qualifications": None,
+        "experience_requirement": None,
+        "industry": None,
+        "skills": None,
+        "responsibilities": None,
+        "value_currency": None,
+        "min_value": None,
+        "max_value":None,
+        "url": None,
+        "value_period": None,
+        "instructions": None,
+        "source": None,
     }
 
     def fetch(self, entry_url: str) -> JobsList:

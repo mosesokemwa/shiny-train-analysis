@@ -1,6 +1,6 @@
 from datetime import datetime
 import pytz
-from jobs.entities import JobsList
+from jobs.models import JobsList
 from .AbstractTokenProvider import AbstractTokenProvider
 from urllib.parse import urlparse, urljoin
 

@@ -9,7 +9,7 @@ from jobs.handlers.cleaner_handler import CleanHtmlHandler
 from jobs.handlers.csv_storage_handler import CsvStorageHandler
 from jobs.handlers.error_handler import ErrorLogHandler
 from jobs.handlers.postgres import PostgresDBHandler
-from jobs.entities.JobListing import JobListing
+from jobs.models.JobListing import JobListing
 from threading import Thread
 
 
