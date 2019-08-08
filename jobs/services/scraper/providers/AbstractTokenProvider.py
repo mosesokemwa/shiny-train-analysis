@@ -40,7 +40,7 @@ class AbstractTokenProvider(AbstractProvider):
                             country = country.get("name")
                         country = country_mapping.get(country)
                     else:
-                        print(address)
+                        pass
                 job_dict = {
                     "job_title": element.get("title"),
                     "hiring_organization": org if type(org) is str else org.get("name"),
