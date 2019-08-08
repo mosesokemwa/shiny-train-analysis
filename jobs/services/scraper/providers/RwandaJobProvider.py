@@ -1,13 +1,12 @@
-
-from urllib.parse import urljoin
+from requests import PreparedRequest
 from jobs.entities import JobsList
 from jobs.services.scraper.providers.AbstractTokenProvider import AbstractTokenProvider
 from .AbstractHTMLProvider import AbstractHTMLProvider
 
 
-class JobWebKenyaProvider(AbstractHTMLProvider, AbstractTokenProvider):
-    host = 'jobwebkenya.com'
-    urls_xpath = '//ol/li/div[2]/strong/a'
+class RwandaJobProvider(AbstractHTMLProvider, AbstractTokenProvider):
+    host = 'rwandajob.com'
+    urls_xpath = "//div[@class='job-search-result  ']/div/div/h5/a"
     properties = {}
 
     def get_job(self, job_link):
@@ -20,22 +19,23 @@ class JobWebKenyaProvider(AbstractHTMLProvider, AbstractTokenProvider):
         for job_link in self.get_jobs_list(entry_url):
             try:
                 page_buffer.append(self.get_job(job_link))
-            except:
-                print("Error Processing %s "%job_link)
+            except Exception as e:
+                print("Error Processing %s %s " % (job_link, e))
 
-        page = 2
+        page = 1
         while len(page_buffer) > 0:
             self.jobs.extend(page_buffer)
             page_buffer = []
 
-            entry_url += '' if entry_url.endswith('/') else '/'
-            loop_url = urljoin(entry_url, f'page/{page}/')
-            print(loop_url)
-            for job_link in self.get_jobs_list(loop_url):
+            prep_url = PreparedRequest()
+            prep_url.prepare(url=entry_url, params={'page': page})
+            next_page_url = prep_url.url
+
+            for job_link in self.get_jobs_list(next_page_url):
                 try:
                     page_buffer.append(self.get_job(job_link))
-                except:
-                    print("Error Processing %s " % job_link)
+                except Exception as e:
+                    print("Error Processing %s %s " % (job_link, e))
 
             print("Scraped page %s" % page)
             page += 1

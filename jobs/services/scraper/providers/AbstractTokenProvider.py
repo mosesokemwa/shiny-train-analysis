@@ -29,7 +29,7 @@ class AbstractTokenProvider(AbstractProvider):
             text = re.sub(r'\s+', ' ', match.text)
             text = re.sub(r',\s*(?=[}\]])', '', text)
             element = json.loads(text.strip())
-            if type(element) is dict and element["@type"] == 'JobPosting':
+            if type(element) is dict and "@type" in element and element["@type"] == 'JobPosting':
                 org = element.get("hiringOrganization", {})
                 country = None
                 address = element.get("jobLocation", {}).get("address")
@@ -59,6 +59,7 @@ class AbstractTokenProvider(AbstractProvider):
                     "value_currency": element.get("salaryCurrency"),
                     "min_value": element.get("baseSalary"),
                     "max_value": element.get("estimatedSalary"),
+                    "url": job_url,
                     "value_period": None,
                     "instructions": None,
                     "source": urlparse(job_url).netloc,

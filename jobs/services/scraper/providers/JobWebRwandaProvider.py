@@ -5,8 +5,8 @@ from jobs.services.scraper.providers.AbstractTokenProvider import AbstractTokenP
 from .AbstractHTMLProvider import AbstractHTMLProvider
 
 
-class JobWebKenyaProvider(AbstractHTMLProvider, AbstractTokenProvider):
-    host = 'jobwebkenya.com'
+class JobWebRwandaProvider(AbstractHTMLProvider, AbstractTokenProvider):
+    host = 'jobwebrwanda.com'
     urls_xpath = '//ol/li/div[2]/strong/a'
     properties = {}
 
@@ -21,7 +21,7 @@ class JobWebKenyaProvider(AbstractHTMLProvider, AbstractTokenProvider):
             try:
                 page_buffer.append(self.get_job(job_link))
             except:
-                print("Error Processing %s "%job_link)
+                print("Error Proccessing %s "%job_link)
 
         page = 2
         while len(page_buffer) > 0:
@@ -35,7 +35,7 @@ class JobWebKenyaProvider(AbstractHTMLProvider, AbstractTokenProvider):
                 try:
                     page_buffer.append(self.get_job(job_link))
                 except:
-                    print("Error Processing %s " % job_link)
+                    print("Error Proccessing %s " % job_link)
 
             print("Scraped page %s" % page)
             page += 1

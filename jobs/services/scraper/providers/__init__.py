@@ -6,6 +6,9 @@ from .FuzuProvider import FuzuProvider
 from .PigiaMeProvider import PigiaMeProvider
 from .JobWebKenyaProvider import JobWebKenyaProvider
 from .GlassDoorProvider import GlassDoorProvider
+from .JobWebRwandaProvider import JobWebRwandaProvider
+from .RwandaJobProvider import RwandaJobProvider
+
 provider_abstract = AbstractProvider.__subclasses__()
 providers = {}
 
