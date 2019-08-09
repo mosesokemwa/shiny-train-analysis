@@ -1,0 +1,16 @@
+version: "3"
+networks:
+  my-postgres:
+    driver: bridge
+
+services:
+  my_postgres:
+    image: postgres:11.1-alpine
+    container_name: my_postgres
+    networks:
+      - my-postgres
+    ports:
+      - 5432:5432
+    volumes:
+      - ./volumes/postgres:/var/lib/postgresql/data
+    restart: unless-stopped
