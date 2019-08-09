@@ -1,0 +1,14 @@
+.nav-hide-sibling + div{
+    opacity: 0.2;
+}
+nav input {
+    border: none!important;
+    border-bottom: solid 1px black;
+}
+input:focus {
+    box-shadow: none!important;
+}
+
+nav + div {
+    transition: opacity 0.5s;
+}
