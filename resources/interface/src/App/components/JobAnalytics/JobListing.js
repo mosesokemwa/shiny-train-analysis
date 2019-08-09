@@ -12,7 +12,7 @@ class Listing extends React.PureComponent{
                                 <tr key={Math.random()}>
                                     <td>{job['id']}</td>
                                     <td>{job['title']}</td>
-                                    <td>{job['organisation']}</td>
+                                    <td>{job['organization']}</td>
                                     <td>{job['location']}</td>
                                     <td>{job['type']}</td>
                                     <td>{moment(job['posted']).format('MMM Do')}</td>
@@ -36,7 +36,7 @@ class Listing extends React.PureComponent{
 export default class JobListing extends React.PureComponent{
     render() {
         const {jobs, updateSort, sorting} = this.props;
-        const sortable_fields = ['id', 'title', 'organisation', 'location', 'type', 'posted', 'deadline'];
+        const sortable_fields = ['id', 'title', 'organization', 'location', 'type', 'posted', 'deadline'];
         const makeSort = (field)=>{
             if(sorting.sortBy!==field){
                 return sortable_fields.includes(field);
@@ -47,7 +47,7 @@ export default class JobListing extends React.PureComponent{
         const heading = [
             ['id', '#', makeSort('id')],
             ['title', 'Title', makeSort('title')],
-            ['organisation', 'Company', makeSort('organisation')],
+            ['organization', 'Company', makeSort('organization')],
             ['location', 'Location', makeSort('location')],
             ['type', 'Type', makeSort('type')],
             ['posted', 'Posted', makeSort('posted')],
@@ -64,7 +64,7 @@ export default class JobListing extends React.PureComponent{
                                 ([field, title, order])=>(
                                     <th key={`title--${field}`} style={{cursor: 'pointer'}}>
                                         {!order?title:
-                                            <span onClick={()=>updateSort(field, (order?order:'asc'))}>
+                                            <span onClick={()=>updateSort(field, (order===true?'asc':(order?order:'asc')))}>
                                                 {title}
                                                 {order===true?
                                                     <span className='fa ml-1 text-muted' style={{opacity: .4}}>

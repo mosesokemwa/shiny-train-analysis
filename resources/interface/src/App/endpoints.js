@@ -1,6 +1,6 @@
-const version = 'v1/';
+const version = '';
 
 export default {
-    JOBS: version + 'jobs/',
+    JOBS: version + 'jobs',
     JOB: version + 'job/'
 }
