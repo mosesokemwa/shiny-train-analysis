@@ -19,13 +19,16 @@ class Command(BaseCommand):
 
     def handle(self, *args, **kwargs):
         url=kwargs["url"]
-        # self.stdout.write(self.style.SUCCESS
         if url=="defaults":
             data=self.service.fetch_providers_urls()
             data=self.service.parse_many(data)
             if data:
                 for d in data:
-                    self.service.store_to_json(d[2],d[1])
-                    self.service.store_to_csv(d[2],d[1])
-                    self.stdout.write(self.style.SUCCESS("Adding {}".format(d[0])))
+                    try:
+                        self.service.store_to_json(d[2],d[1])
+                        self.service.store_to_csv(d[2],d[1])
+                        self.service.store_to_db(d)
+                        self.stdout.write(self.style.SUCCESS("Adding {}".format(d[0])))
+                    except Exception as e:
+                        self.stdout.write(self.style.ERROR("Error:%s" %e))
             return

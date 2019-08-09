@@ -3,17 +3,20 @@ from django.contrib.postgres.fields import ArrayField
 
 class JobListing(models.Model):
 
-    title=models.CharField(max_length=255,null=False)
+    title=models.CharField(max_length=255)
     hiring_organization=models.ForeignKey('jobs.HiringOrganization',related_name="organization_jobs", on_delete=models.CASCADE,null=False)
-    provider=models.ForeignKey('jobs.Provider',related_name="provder_jobs", on_delete=models.CASCADE,null=False)
+    provider=models.ForeignKey('jobs.Provider',related_name="provder_jobs", on_delete=models.CASCADE)
+    location=models.CharField(max_length=255, null=True)
     
     # skills
     skills=ArrayField(
-        models.CharField(max_length=255)
+        models.CharField(max_length=255),
+        null=True
     )
     # tags
     tags=ArrayField(
-        models.CharField(max_length=255)
+        models.CharField(max_length=255),
+        null=True
     )
 
     # FULL/PART TIME
@@ -24,11 +27,11 @@ class JobListing(models.Model):
     valid_to=models.DateField(null=True)
 
     #url to job
-    url=models.TextField(null=False)
+    url=models.TextField(unique=True)
     #months -> experience in months
-    months=models.PositiveIntegerField()
+    months=models.PositiveIntegerField(null=True)
     # name of industry
-    industry=models.CharField(max_length=255)
+    industry=models.CharField(max_length=255,null=True)
 
     # description / responsibilities / education / experience / qualifications
     description=models.TextField(null=True)

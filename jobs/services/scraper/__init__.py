@@ -1,6 +1,5 @@
 default_providers_list = {
     "glassdoor-rw": "https://www.glassdoor.com/Job/rwanda-jobs-SRCH_IL.0,6_IN206.htm",
-    "jobwebrwanda": "https://jobwebrwanda.com/job-category/ittelecom-jobs-in-rwanda/",
     "jobwebkenya": "https://jobwebkenya.com/job-category/ittelecom-jobs-in-kenya-2013/",
     "rwandajob": "https://www.rwandajob.com/job-vacancies-search-rwanda?f%5B0%5D=im_field_offre_secteur%3A133",
     "fuzu-it-software": "https://www.fuzu.com/categories/it-software",
@@ -9,7 +8,10 @@ default_providers_list = {
     "brightermonday-tz": "https://www.brightermonday.co.tz/jobs/technology/",
     "pigiame": "https://www.pigiame.co.ke/it-telecoms-jobs",
     "ihub-jobs": "https://ihub.co.ke/jobs",
-    "careerpointkenya": "https://www.careerpointkenya.co.ke/category/ict-jobs-in-kenya/",
+
+    # @todo find a better way to scrape their large amount of data
+    # "careerpointkenya": "https://www.careerpointkenya.co.ke/category/ict-jobs-in-kenya/",
+    # "jobwebrwanda": "https://jobwebrwanda.com/job-category/ittelecom-jobs-in-rwanda/",
 }
 
 country_mapping = {

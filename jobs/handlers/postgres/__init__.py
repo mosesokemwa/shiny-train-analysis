@@ -6,18 +6,23 @@ class PostgresDBHandler:
     def __init__(self, *args, **kwargs):
         pass
 
-
     def fetch_dict(self,sql,params,one=True):
         data=None
-        with connection.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
+        with connection.cursor() as cursor:
             cursor.execute(
                 sql,
                 params
                 )
-            if one:
-                data=cursor.fetchone()
+            desc = cursor.description 
+            if one==True:
+                item=cursor.fetchone()
+                data=[dict(zip([col[0] for col in desc], item))]
             else:
-                data=cursor.fetchall()
+  
+                data=[
+                        dict(zip([col[0] for col in desc], row)) 
+                        for row in cursor.fetchall()
+                ]
         return data
 
     def fetch(self,sql,params,one=True):
