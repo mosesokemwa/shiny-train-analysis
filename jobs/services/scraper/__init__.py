@@ -1,4 +1,5 @@
 default_providers_list = {
+    # scrapes .co.uk in production
     #"glassdoor-rw": "https://www.glassdoor.com/Job/rwanda-jobs-SRCH_IL.0,6_IN206.htm",
     "jobwebkenya": "https://jobwebkenya.com/job-category/ittelecom-jobs-in-kenya-2013/",
     "rwandajob": "https://www.rwandajob.com/job-vacancies-search-rwanda?f%5B0%5D=im_field_offre_secteur%3A133",

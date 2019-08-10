@@ -12,4 +12,4 @@ class HiringOrganization(AbstractModel):
         verbose_name_plural ="Hiring_Organizations"
 
     def __str__(self):
-        return "company:{}".format(self.name if self.name else self.id)
+        return "organization:{}".format(self.name if self.name else self.id)

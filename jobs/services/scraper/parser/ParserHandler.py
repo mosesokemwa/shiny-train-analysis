@@ -9,7 +9,7 @@ class ParserHandler(AbstractParserHandler,ErrorLogHandler):
 
     def __init__(self):
         self.NEW_KEYS:Dict={
-            "job_tags":self.get_jobs_tag,
+            "job_techs":self.get_jobs_technologies,
             "months":self.get_months,
             "employment":self.get_employment_type
         }
@@ -35,20 +35,46 @@ class ParserHandler(AbstractParserHandler,ErrorLogHandler):
             self.logError(sys.exc_info(), e, True)
             return job_list
 
-    def get_jobs_tag(self,job:Dict) -> Dict:
+
+    def get_jobs_technologies(self,job:Dict) -> Dict:
         try:
-            Languages = ['4th Dimension', '4D', 'ABAP', 'ABC', 'ActionScript', 'Ada', 'Agilent VEE', 'Algol', 'Alice', 'Angelscript', 'Apex', 'APL', 'AppleScript', 'Arc', 'Arduino', 'ASP', 'AspectJ', 'Assembly', 'ATLAS', 'Augeas', 'AutoHotkey', 'AutoIt', 'AutoLISP', 'Automator', 'Avenue', 'Awk', 'Bash', '(Visual) Basic', 'bc', 'BCPL', 'BETA', 'BlitzMax', 'Boo', 'Bourne Shell', 'Bro', 'C', 'C Shell', 'C#','C/C++', 'C++','CLI', 'C-Omega', 'Caml', 'Ceylon', 'CFML', 'cg', 'Ch', 'CHILL', 'CIL', 'CL (OS/400)', 'Clarion', 'Clean', 'Clipper', 'Clojure', 'CLU', 'COBOL', 'Cobra', 'CoffeeScript', 'ColdFusion', 'COMAL', 'Common Lisp', 'Coq', 'cT', 'Curl', 'D', 'Dart', 'DCL', 'DCPU-16 ASM', 'Delphi', 'Object Pascal', 'DiBOL', 'Dylan', 'E', 'eC', 'Ecl', 'ECMAScript', 'EGL', 'Eiffel', 'Elixir', 'Emacs Lisp', 'Erlang', 'Etoys', 'Euphoria', 'EXEC', 'F#', 'Factor', 'Falcon', 'Fancy', 'Fantom', 'Felix', 'Forth', 'Fortran', 'Fortress', '(Visual) FoxPro', 'Gambas', 'GNU Octave', 'Go', 'Google AppsScript', 'Gosu', 'Groovy', 'Haskell', 'haXe', 'Heron', 'HPL', 'HyperTalk', 'Icon', 'IDL', 'Inform', 'Informix-4GL', 'INTERCAL', 'Io', 'Ioke', 'J', 'J#', 'JADE', 'Java', 'Java FX Script', 'JavaScript', 'JScript', 'JScript.NET', 'Julia', 'Korn Shell', 'Kotlin', 'LabVIEW', 'Ladder Logic', 'Lasso', 'Limbo', 'Lingo', 'Lisp', 'Logo', 'Logtalk', 'LotusScript', 'LPC', 'Lua', 'Lustre', 'M4', 'MAD', 'Magic', 'Magik', 'Malbolge', 'MANTIS', 'Maple', 'Mathematica', 'MATLAB', 'Max', 'MSP', 'MAXScript', 'MEL', 'Mercury', 'Mirah', 'Miva', 'ML', 'Monkey', 'Modula-2', 'Modula-3', 'MOO', 'Moto', 'MS-DOS Batch', 'MUMPS', 'NATURAL', 'Nemerle', 'Nimrod', 'NQC', 'NSIS', 'Nu', 'NXT-G', 'Oberon', 'Object Rexx', 'Objective-C', 'Objective-J', 'OCaml', 'Occam', 'ooc', 'Opa', 'OpenCL', 'OpenEdge ABL', 'OPL', 'Oz', 'Paradox', 'Parrot', 'Pascal', 'Perl', 'PHP', 'Pike', 'PILOT', 'PL', 'I', 'PL', 'SQL', 'Pliant', 'PostScript', 'POV-Ray', 'PowerBasic', 'PowerScript', 'PowerShell', 'Processing', 'Prolog', 'Puppet', 'Pure Data', 'Python', 'Q', 'R', 'Racket', 'REALBasic', 'REBOL', 'Revolution', 'REXX', 'RPG (OS/400)', 'Ruby', 'Rust', 'S', 'S-PLUS', 'SAS', 'Sather', 'Scala', 'Scheme', 'Scilab', 'Scratch', 'sed', 'Seed7', 'Self', 'Shell', 'SIGNAL', 'Simula', 'Simulink', 'Slate', 'Smalltalk', 'Smarty', 'SPARK', 'SPSS', 'SQR', 'Squeak', 'Squirrel', 'Standard ML', 'Suneido', 'SuperCollider', 'TACL', 'Tcl', 'Tex', 'thinBasic', 'TOM', 'Transact-SQL', 'Turing', 'TypeScript', 'Vala', 'Genie', 'VBScript', 'Verilog', 'VHDL', 'VimL', 'Visual Basic .NET', 'WebDNA', 'Whitespace', 'X10', 'xBase', 'XBase++', 'Xen', 'XPL', 'XSLT', 'XQuery', 'yacc', 'Yorick', 'Z shell']
-            fields_=["description","skills","responsibilities"]
-            s=''.join(v or '' for k,v in job.items() if k in fields_)
-            Languages = map(re.escape, Languages)
-            skills_regex = '(?<=[ ,(])('+'|'.join(Languages)+')(?=[,|\)])'
-            skills = re.findall(skills_regex, s, flags=re.IGNORECASE)
+            Languages = ['ActionScript', 'Ada', 'Arduino', 'Assembly', 'AutoIt', 'Awk', 'Bash', 'Visual Basic', 
+            'C', 'C#', 'C/C++', 'C++', 'Css',"css3","Html","Html5", 'Caml', 'Clojure', 'COBOL', 'CoffeeScript', 'Dart', 'ECMAScript', 
+            'Elixir', 'Erlang', 'Fortran', 'Go', 'Groovy', 'Haskell', 'Java', 'JavaScript', 'Julia', 'Kotlin',
+             'Lisp', 'Lua', 'Maple', 'Mathematica', 'MATLAB', 'Mercury', 'Objective-C', 'OCaml', 'OpenCL', 
+             'Pascal', 'Perl', 'PHP', 'SQL', 'PowerScript', 'PowerShell', 'Prolog', 'Puppet', 'Python', 'R',
+              'Ruby', 'Rust', 'SAS', 'Scala', 'Scilab', 'SPARK', 'SPSS', 'TypeScript', 'VBScript','Visual Basic .NET', 'XQuery']
+            
+            # https://en.wikipedia.org/wiki/Comparison_of_web_frameworks#Python
+            #  https://hotframeworks.com/
+            frameworks=["Django","React","Angular","Vue","Flask","ASP.NET","Laravel","symfony",
+            "wordpress","Drupal","Rails","Express","Node js"]            
+
+            technologies=Languages+frameworks
+
+            fields_=["description","skills","responsibilities","qualifications","instructions","education_requirements"]
+            
+            s=""
+            for f in fields_:
+                try:
+                    v=job[f]
+                    if v==None:continue
+                    if type(v)==list:v=" ".join(v)
+                    s+= " " + v
+                except Exception as e:
+                    print(e)
+                    
+            # s=' '.join(v or '' for k,v in job.items() if k in fields_)
+            # s= ' '.join(job[i] for i in fields_ if type(job[i]))
+            technologies = map(re.escape, technologies)
+            technologies_regex = '(?<=[ ,(])('+'|'.join(technologies)+')(?=[,|\)])'
+            techs = re.findall(technologies_regex, s, flags=re.IGNORECASE)
             # do something
-            return {"tags":','.join([str(i) for i in list(set(skills))])}
+            return {"technologies":[str(i).lower() for i in list(set(techs))]}
 
         except Exception as e:
             self.logError(sys.exc_info(), e, True)
-            return {"tags":''}
+            return {"technologies":[]}
 
     def get_months(self,job:Dict) -> Dict:
         # (\d)[\s.]?(years?|months?|weeks?)|none
@@ -56,7 +82,7 @@ class ParserHandler(AbstractParserHandler,ErrorLogHandler):
             durations = {"year": 12, "month": 1, "week": 0.25}
             level_regex = r"(\d+)[\s.]?(year|month|week)s?|(none)"
             fields = ["experience_requirement"]
-            string = ''.join(job.get(f,"") for f in fields)
+            string = ''.join(job.get(f,"") for f in fields if type(job.get(f,""))==str)
             match = re.search(level_regex, string)
             if match==None: return {"months":""}
             if match.group(3):
@@ -72,7 +98,7 @@ class ParserHandler(AbstractParserHandler,ErrorLogHandler):
         try:
             fields_=["job_title","employment_type","description","requirements","skills"]
             default = job.get("employment_type", "")
-            s=''.join(str(v) or '' for k,v in job.items() if k in fields_)
+            s=''.join(str(v) or '' for k,v in job.items() if k in fields_ and v!=None)
             type_regex = r'(?:FULL|PART)[_\- ]?TIME'
             employment_type = re.findall(type_regex, s, flags=re.IGNORECASE) + default if type(default) is list else [default]
             # parse_job_list
@@ -81,3 +107,4 @@ class ParserHandler(AbstractParserHandler,ErrorLogHandler):
             self.logError(sys.exc_info(), e, True)
             return  {"employment_type": ""}
             
+

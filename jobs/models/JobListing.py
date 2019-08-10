@@ -13,8 +13,8 @@ class JobListing(models.Model):
         models.CharField(max_length=255),
         null=True
     )
-    # tags
-    tags=ArrayField(
+    # technologies
+    technologies=ArrayField(
         models.CharField(max_length=255),
         null=True
     )

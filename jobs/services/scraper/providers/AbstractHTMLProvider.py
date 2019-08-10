@@ -23,6 +23,7 @@ class AbstractHTMLProvider(AbstractProvider):
     def properties(self): raise NotImplementedError
 
     def get_job(self, job_url: str) -> Job:
+        print("Fetching Job: {}".format(job_url))
         content = session.get(job_url).content
         tree = fromstring(content.decode())
         job_dict = {}

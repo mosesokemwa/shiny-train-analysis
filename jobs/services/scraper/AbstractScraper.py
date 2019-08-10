@@ -18,10 +18,6 @@ class AbstractScraper(abc.ABC):
         pass
 
     @abc.abstractmethod
-    def set_parser(self,parser):
-        pass
-
-    @abc.abstractmethod
     def set_provider_urls(self,providers_list):
         pass
 

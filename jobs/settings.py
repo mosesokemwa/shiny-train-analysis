@@ -1,6 +1,6 @@
 import os
 import dj_database_url
-from decouple import config
+from decouple import config,Csv
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -10,12 +10,12 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '!_(qw!hab!^cm3=1%%m(z&r&s)u%f$ptvx1+3z7=chf_g=!npv'
+SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', default=["*"],cast=Csv())
 
 
 # Application definition
@@ -134,4 +134,4 @@ LOGGING = {
 }
 
 ## CORS
-CORS_ORIGIN_ALLOW_ALL=True
+CORS_ORIGIN_ALLOW_ALL=config('CORS_ORIGIN_ALLOW_ALL', default=False,cast=bool)
