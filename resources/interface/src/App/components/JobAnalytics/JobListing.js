@@ -1,34 +1,42 @@
 import React from "react"
 import moment from "moment";
+import "./job-listing.css"
 
 class Listing extends React.PureComponent{
     render() {
         const {jobs} = this.props;
         return (
             <tbody>
-                    {
-                        jobs.map(
-                            job => (
-                                <tr key={Math.random()}>
-                                    <td>{job['id']}</td>
-                                    <td>{job['title']}</td>
-                                    <td>{job['organization']}</td>
-                                    <td>{job['location']}</td>
-                                    <td>{job['type']}</td>
-                                    <td>{moment(job['posted']).format('MMM Do')}</td>
-                                    <td>{moment(job['deadline']).format('MMM Do')}</td>
-                                    <td>
-                                        <a href={job.url} target='_blank' rel='noreferrer noopener'>
-                                            <button className='btn btn-primary'>
-                                                View
-                                            </button>
-                                        </a>
-                                    </td>
-                                </tr>
-                            )
-                        )
-                    }
-                    </tbody>
+            {
+                jobs.map(
+                    job => (
+                        <tr key={Math.random()}>
+                            <td>{job['id']}</td>
+                            <td className='position-relative'>
+                                <span className='mr-2'>{job['title']}</span>
+                                {job['skills']!==null?<i
+                                    className='fa fa-info-circle position-absolute text-muted hover-dark mt-1'
+                                    style={{cursor: 'pointer'}}
+                                    title={'\u2022 ' + (job['skills']||[]).join('\n\u2022 ')}
+                                />:null}
+                            </td>
+                            <td>{job['organization']}</td>
+                            <td>{job['location']}</td>
+                            <td>{job['type']}</td>
+                            <td>{moment(job['posted']).format('MMM Do')}</td>
+                            <td>{moment(job['deadline']).format('MMM Do')}</td>
+                            <td>
+                                <a href={job.url} target='_blank' rel='noreferrer noopener'>
+                                    <button className='btn btn-primary'>
+                                        View
+                                    </button>
+                                </a>
+                            </td>
+                        </tr>
+                    )
+                )
+            }
+            </tbody>
         )
     }
 }
