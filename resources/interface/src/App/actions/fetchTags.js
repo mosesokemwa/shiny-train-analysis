@@ -1,36 +1,31 @@
-import {FAIL_GET_JOBS, FIRE_GET_JOBS, PASS_GET_JOBS} from "../actions/types"
+import {FAIL_GET_TAGS, FIRE_GET_TAGS, PASS_GET_TAGS} from "../actions/types"
 import endpoints from "../endpoints";
 import api from "../api";
 
 function fireGet() {
     return {
-        type: FIRE_GET_JOBS
+        type: FIRE_GET_TAGS
     }
 }
 
 function failGet(error) {
     return {
-        type: FAIL_GET_JOBS,
+        type: FAIL_GET_TAGS,
         error: error
     }
 }
 
 function passGet(data) {
     return {
-        type: PASS_GET_JOBS,
+        type: PASS_GET_TAGS,
         data: data
     }
 }
 
-export default function fetchJobs(filters={}, sorting={}){
+export default function fetchTags(){
     return dispatch => {
         dispatch(fireGet());
-        api.get(endpoints.JOBS, {
-            params: {
-                ...filters,
-                ...sorting
-            }
-        })
+        api.get(endpoints.TAGS)
             .then(data => data.data)
             .then(data => dispatch(passGet(data)))
             .catch(error => dispatch(failGet(error.message)))

@@ -3,6 +3,8 @@ import {connect} from "react-redux";
 import fetchJobs from "../../actions/fetchJobs";
 import JobListing from "./JobListing";
 import moment from "moment";
+import fetchTags from "../../actions/fetchTags";
+import ChooseFromList from "../fragments/chooseFromList";
 
 class JobAnalytics extends React.Component{
     constructor(props) {
@@ -27,18 +29,29 @@ class JobAnalytics extends React.Component{
     }
 
     componentDidMount() {
-        this.props.fetchJobs(this.state.filters, this.state.sorting)
+        this.props.fetchJobs(this.state.filters, this.state.sorting);
+        this.props.fetchTags();
     }
 
-    componentWillUpdate(nextProps, nextState, nextContext) {
+    componentDidUpdate(prevProps, prevState, snapshot) {
         clearTimeout(this.timeout);
-        if (nextState.filters !== this.state.filters || nextState.sorting !== this.state.sorting){
-            this.timeout = setTimeout(()=>this.props.fetchJobs(nextState.filters, nextState.sorting), 500)
+        if (this.state.filters !== prevState.filters || this.state.sorting !== prevState.sorting){
+            this.timeout = setTimeout(()=>this.props.fetchJobs(this.state.filters, this.state.sorting), 500)
         }
     }
 
     updateValue(event) {
         this.setState({filters: {...this.state.filters, [event.target.name]: event.target.value}})
+    }
+
+    updateTechnologies(technologies){
+        const filters = {...this.state.filters};
+        if (technologies.length === 0){
+            delete filters['tags'];
+            this.setState({filters})
+        } else {
+            this.setState({filters: {...filters, tags: technologies}});
+        }
     }
 
     toggleJobType(jobType) {
@@ -60,17 +73,26 @@ class JobAnalytics extends React.Component{
 
     renderFilters(){
         const {jobTypes} = this.state;
+        const {tags} = this.props;
         const {types, deadline, posted} = this.state.filters;
         return (
             <div className='p-4'>
                 <div className='form-row'>
-                    <div className='form-group col-8'>
+                    <div className='form-group col-6'>
+                        <label>Job Title</label>
+                        <input className='form-control' name='title' placeholder='Company' onInput={event => this.updateValue(event)} />
+                    </div>
+                    <div className='form-group col-6'>
                         <label>Company Name</label>
-                        <input className='form-control' name='organisation' placeholder='Company' onInput={event => this.updateValue(event)} />
+                        <input className='form-control' name='organization' placeholder='Company' onInput={event => this.updateValue(event)} />
                     </div>
                     <div className='form-group col-4'>
                         <label>Location</label>
                         <input className='form-control' name='location' placeholder='Location' onInput={event => this.updateValue(event)} />
+                    </div>
+                    <div className='form-group col'>
+                        <label>Technologies</label>
+                        <ChooseFromList choices={tags} onChoose={(technologies)=>this.updateTechnologies(technologies)}/>
                     </div>
                     <div className='form-group flex-wrap col'>
                         <div>
@@ -130,7 +152,8 @@ class JobAnalytics extends React.Component{
 function mapStateTopProps(state){
     return {
         jobs: state.jobs.data,
+        tags: state.tags.data,
         isLoading: state.jobs.isLoading
     }
 }
-export default connect(mapStateTopProps, {fetchJobs})(JobAnalytics)
+export default connect(mapStateTopProps, {fetchJobs, fetchTags})(JobAnalytics)

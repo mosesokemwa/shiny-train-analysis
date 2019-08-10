@@ -1,0 +1,31 @@
+.live-input{
+    border: none;
+    width: auto;
+}
+.live-input:focus{
+    box-shadow: none!important;
+    outline: none;
+}
+.choice-input{
+    height: auto;
+}
+.choice-input:focus-within{
+    border-color: #80bdff;
+    box-shadow: none!important;
+}
+.input-suggestions{
+    z-index: 100;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+}
+.input-suggestions > table tr:first-child td {
+    border-top: 0;
+}
+.input-suggestions > table {
+    margin-bottom: 0;
+}
+.pointer{
+    cursor: pointer;
+}
