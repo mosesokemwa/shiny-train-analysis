@@ -23,7 +23,7 @@ class JobsApiSerializer:
         job_title=filters.get("title",default=None)
         location=filters.get("location",default=None)
         organization=filters.get("organization",default=None)
-        technologies=filters.getlist("technology[]",default=None)
+        technologies=filters.getlist("tags[]",default=None)
         sortable_fields={'id':'job.id', 'title':'job.title', 'organization':'hiring_organization.name',
                         'location':'job.location', 'type':'job.employment_type', 'posted':'job.dead_posted', 'deadline':'job.valid_to'}
         order_options={"asc":"ASC","desc":"DESC"}
