@@ -80,7 +80,7 @@ class JobAnalytics extends React.Component{
                 <div className='form-row'>
                     <div className='form-group col-6'>
                         <label>Job Title</label>
-                        <input className='form-control' name='title' placeholder='Company' onInput={event => this.updateValue(event)} />
+                        <input className='form-control' name='title' placeholder='Job Title' onInput={event => this.updateValue(event)} />
                     </div>
                     <div className='form-group col-6'>
                         <label>Company Name</label>
