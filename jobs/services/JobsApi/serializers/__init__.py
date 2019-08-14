@@ -6,6 +6,24 @@ from rest_framework.exceptions import APIException
 from jobs.models import JobListing,Provider,HiringOrganization
 from jobs.handlers.postgres import PostgresDBHandler
 
+class JobLocationsSerializer:
+    db_handler=PostgresDBHandler()
+    def get(self,filters):
+        location_type = filters.get("type","cities")
+        location_fields = {"cities":"job.city","countries":"job.country"}
+        if location_type not in location_fields.keys():
+            return []
+        sql='''
+        SELECT array_agg(DISTINCT LOWER({field}) ) as locations FROM job_listings job
+        '''.format(field=location_fields[location_type])
+        data = self.db_handler.fetch_dict(sql,{},one=True)
+        if data:
+            bad_data = [None,""]
+            [data[0]["locations"].remove(i) for i in bad_data if i in data[0]["locations"]]
+            return {"locations":data[0]["locations"]}
+        return {"locations":[]}
+
+
 class SyncJobsSerializer:
     db_handler=PostgresDBHandler()
     def get(self,filters):
@@ -110,5 +128,3 @@ class JobsApiSerializer:
         sql+=" ORDER BY {sort_field} {order}".format(sort_field=sortable_fields[sortBy], order=order_options[orderBy])
         data= self.db_handler.fetch_dict(sql,params,one=False)
         return data
-
-        
