@@ -1,7 +1,8 @@
 from django.db import models
 from django.contrib.postgres.fields import ArrayField
+from jobs.models import AbstractModel
 
-class JobListing(models.Model):
+class JobListing(AbstractModel):
 
     title=models.CharField(max_length=255)
     hiring_organization=models.ForeignKey('jobs.HiringOrganization',related_name="organization_jobs", on_delete=models.CASCADE,null=False)

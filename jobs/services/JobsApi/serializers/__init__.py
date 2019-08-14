@@ -6,7 +6,19 @@ from rest_framework.exceptions import APIException
 from jobs.models import JobListing,Provider,HiringOrganization
 from jobs.handlers.postgres import PostgresDBHandler
 
-
+class SyncJobsSerializer:
+    db_handler=PostgresDBHandler()
+    def get(self,filters):
+        latest = filters.get("latest",None)
+        sql='''
+        SELECT s.id as id, s.error as error, s.error_message as error_message, s.created_at as created_at
+        FROM server_sync_jobs s
+        ORDER BY s.created_at
+        '''
+        sql += ' LIMIT 1' if type(latest) == str  and latest.lower() == "true" else ""
+        print(sql)
+        data =  self.db_handler.fetch_dict(sql,{},one=False)
+        return data
 
 class TechnologiesSerializer:
     db_handler=PostgresDBHandler()
@@ -25,7 +37,7 @@ class JobsApiSerializer:
         organization=filters.get("organization",default=None)
         technologies=filters.getlist("tags[]",default=None)
         sortable_fields={'id':'job.id', 'title':'job.title', 'organization':'hiring_organization.name',
-                        'location':'job.location', 'type':'job.employment_type', 'posted':'job.dead_posted', 'deadline':'job.valid_to'}
+                        'location':'job.location', 'type':'job.employment_type', 'posted':'job.date_posted', 'deadline':'job.valid_to'}
         order_options={"asc":"ASC","desc":"DESC"}
         sortBy=filters.get("sortBy",default="id")
         orderBy=filters.get("order",default="asc")
@@ -37,7 +49,8 @@ class JobsApiSerializer:
         sql='''
         SELECT job.id as id, job.title as title, hiring_organization.name as organization, job.location as location, 
         job.employment_type as type, job.industry as industry, job.date_posted as posted, job.valid_to as deadline,
-        job.url as url, job.months as months, job.skills as skills, job.technologies as technologies
+        job.url as url, job.months as months, job.skills as skills, job.technologies as technologies,
+        job.created_at as created_at, job.inserted_at as updated_at
         FROM job_listings job
         INNER JOIN hiring_organizations hiring_organization ON hiring_organization.id = job.hiring_organization_id
         '''
