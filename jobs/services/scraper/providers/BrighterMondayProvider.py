@@ -5,6 +5,7 @@ from .AbstractTokenProvider import AbstractTokenProvider
 
 
 class BrighterMondayProvider(AbstractTokenProvider):
+    name = "Brighter Monday"
     pagination = 'page'
     host = ['brightermonday.co.ke', 'brightermonday.co.ug', 'brightermonday.co.tz']
     timezone = pytz.timezone("Africa/Nairobi")

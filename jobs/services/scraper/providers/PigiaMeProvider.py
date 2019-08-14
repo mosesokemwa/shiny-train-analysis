@@ -6,6 +6,7 @@ from urllib.parse import urlparse, urljoin
 
 
 class PigiaMeProvider(AbstractTokenProvider):
+    name = "Pigiame"
     pagination = 'page'
     host = 'pigiame.co.ke'
     timezone = pytz.timezone('Africa/Nairobi')

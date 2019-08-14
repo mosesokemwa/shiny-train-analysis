@@ -7,6 +7,7 @@ import pytz
 
 
 class IHubProvider(AbstractHTMLProvider):
+    name = "Ihub"
     host = 'ihub.co.ke'
     urls_xpath = '//h3/a'
     timezone = pytz.timezone('Africa/Nairobi')

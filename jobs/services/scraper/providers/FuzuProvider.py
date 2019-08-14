@@ -8,6 +8,7 @@ from urllib.parse import urlparse, urljoin
 
 
 class FuzuProvider(AbstractTokenProvider):
+    name = "Fuzu"
     pagination = 'page'
     host = 'fuzu.com'
     timezone = pytz.timezone("Africa/Nairobi")

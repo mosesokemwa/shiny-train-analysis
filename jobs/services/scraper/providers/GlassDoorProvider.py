@@ -18,6 +18,7 @@ session.mount('https://', adapter)
 
 
 class GlassDoorProvider(AbstractTokenProvider):
+    name = "Glassdoor"
     pagination_xpath = "//li[@class='next']//a"
     host = 'glassdoor.com'
     timezone = pytz.timezone('Africa/Nairobi')

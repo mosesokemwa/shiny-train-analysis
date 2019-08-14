@@ -6,6 +6,7 @@ from .AbstractHTMLProvider import AbstractHTMLProvider
 
 
 class JobWebKenyaProvider(AbstractHTMLProvider, AbstractTokenProvider):
+    name = "Jobweb Kenya"
     host = 'jobwebkenya.com'
     urls_xpath = '//ol/li/div[2]/strong/a'
     properties = {}

@@ -20,6 +20,16 @@ class SyncJobsSerializer:
         data =  self.db_handler.fetch_dict(sql,{},one=False)
         return data
 
+class ProvidersSerializer:
+    db_handler=PostgresDBHandler()
+    def get(self,filters):
+        sql='''
+        select provider.id as id, provider.name as name, provider.hosts as hosts, provider.created_at as created_at
+        FROM providers provider ORDER BY provider.id
+        '''
+        data =  self.db_handler.fetch_dict(sql,{},one=False)
+        return data
+
 class TechnologiesSerializer:
     db_handler=PostgresDBHandler()
     def get(self):
@@ -36,6 +46,7 @@ class JobsApiSerializer:
         location=filters.get("location",default=None)
         organization=filters.get("organization",default=None)
         technologies=filters.getlist("tags[]",default=None)
+        provider_id = filters.get("provider_id",default=None)
         sortable_fields={'id':'job.id', 'title':'job.title', 'organization':'hiring_organization.name',
                         'location':'job.location', 'type':'job.employment_type', 'posted':'job.date_posted', 'deadline':'job.valid_to'}
         order_options={"asc":"ASC","desc":"DESC"}
@@ -50,7 +61,7 @@ class JobsApiSerializer:
         SELECT job.id as id, job.title as title, hiring_organization.name as organization, job.location as location, 
         job.employment_type as type, job.industry as industry, job.date_posted as posted, job.valid_to as deadline,
         job.url as url, job.months as months, job.skills as skills, job.technologies as technologies,
-        job.created_at as created_at, job.inserted_at as updated_at
+        job.provider_id as provider_id, job.created_at as created_at, job.inserted_at as updated_at
         FROM job_listings job
         INNER JOIN hiring_organizations hiring_organization ON hiring_organization.id = job.hiring_organization_id
         '''
@@ -74,6 +85,10 @@ class JobsApiSerializer:
         if location != None:
             sql_filters.append(" LOWER(job.location) ~ LOWER(%(location)s)")
             params["location"]=location
+        
+        if provider_id != None:
+            sql_filters.append(" job.provider_id = %(provider_id)s")
+            params["provider_id"] = provider_id
 
         if technologies != None and len(technologies)>0:
             tech_filters=[]

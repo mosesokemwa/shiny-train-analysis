@@ -16,7 +16,7 @@ class AbstractScraperStorageHandler(abc.ABC):
 class PostgresScraperStorageHandler(AbstractScraperStorageHandler):
 
     def store(self,results)->bool:
-        provider_name=providers[results[0]].__class__.__name__
+        provider_name = provider_name = providers[results[0]].name if hasattr(providers[results[0]],"name") else providers[results[0]].__class__.__name__
         provider=Provider.objects.get(name=provider_name)
         for job in results[1]:
             try:

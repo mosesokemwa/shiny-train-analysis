@@ -7,6 +7,7 @@ from .AbstractHTMLProvider import AbstractHTMLProvider
 
 
 class CareerPointProvider(AbstractHTMLProvider, AbstractTokenProvider):
+    name = "Career Point"
     pagination = 'page'
     host = 'careerpointkenya.co.ke'
     properties = None
