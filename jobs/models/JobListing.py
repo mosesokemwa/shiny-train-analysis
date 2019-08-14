@@ -6,8 +6,10 @@ class JobListing(AbstractModel):
 
     title=models.CharField(max_length=255)
     hiring_organization=models.ForeignKey('jobs.HiringOrganization',related_name="organization_jobs", on_delete=models.CASCADE,null=False)
-    provider=models.ForeignKey('jobs.Provider',related_name="provider_jobs", on_delete=models.CASCADE)
-    location=models.CharField(max_length=255, null=True)
+    provider=models.ForeignKey('jobs.Provider',related_name="provder_jobs", on_delete=models.CASCADE)
+    # location=models.CharField(max_length=255, null=True)
+    country = models.CharField(max_length=255, null=True)
+    city = models.CharField(max_length=255, null=True)
     
     # skills
     skills=ArrayField(

@@ -43,12 +43,12 @@ class JobsApiSerializer:
         posted=dateutil.parser.parse(filters.get("posted")) if filters.get("posted",default=None) != None else None
         deadline=dateutil.parser.parse(filters.get("deadline")) if filters.get("deadline",default=None) != None else None
         job_title=filters.get("title",default=None)
-        location=filters.get("location",default=None)
+        cities=filters.getlist("cities[]",default=None)
         organization=filters.get("organization",default=None)
         technologies=filters.getlist("tags[]",default=None)
         provider_id = filters.get("provider_id",default=None)
         sortable_fields={'id':'job.id', 'title':'job.title', 'organization':'hiring_organization.name',
-                        'location':'job.location', 'type':'job.employment_type', 'posted':'job.date_posted', 'deadline':'job.valid_to'}
+                        'cities':'job.city', 'type':'job.employment_type', 'posted':'job.date_posted', 'deadline':'job.valid_to'}
         order_options={"asc":"ASC","desc":"DESC"}
         sortBy=filters.get("sortBy",default="id")
         orderBy=filters.get("order",default="asc")
@@ -58,7 +58,7 @@ class JobsApiSerializer:
             raise APIException("Invalid order option")
 
         sql='''
-        SELECT job.id as id, job.title as title, hiring_organization.name as organization, job.location as location, 
+        SELECT job.id as id, job.title as title, hiring_organization.name as organization, job.city as city, job.country as country,
         job.employment_type as type, job.industry as industry, job.date_posted as posted, job.valid_to as deadline,
         job.url as url, job.months as months, job.skills as skills, job.technologies as technologies,
         job.provider_id as provider_id, job.created_at as created_at, job.inserted_at as updated_at
@@ -81,10 +81,6 @@ class JobsApiSerializer:
         if job_title != None:
             sql_filters.append(" LOWER(job.title) ~ LOWER(%(job_title)s)")
             params["job_title"]=job_title
-
-        if location != None:
-            sql_filters.append(" LOWER(job.location) ~ LOWER(%(location)s)")
-            params["location"]=location
         
         if provider_id != None:
             sql_filters.append(" job.provider_id = %(provider_id)s")
@@ -98,6 +94,15 @@ class JobsApiSerializer:
                     tech_filters.append(" job.technologies @> %("+"tech"+str(i)+")s::VARCHAR[255]")
                     params["tech"+str(i)]=[tech.lower()]
             sql_filters.append(" OR ".join(tech_filters))
+
+        if cities != None and len(cities)>0:
+            city_filters=[]
+            # @todo find a better method
+            for i,city in enumerate(cities):
+                if type(city)==str and city !="":
+                    city_filters.append(" LOWER(job.city) ~ LOWER(%(city"+str(i)+")s)")
+                    params["city"+str(i)]=city
+            sql_filters.append(" OR ".join(city_filters))
 
         if len(sql_filters)>0:
             sql+=" WHERE " +" AND ".join([i for i in sql_filters if type(i)==str and i!=""])
