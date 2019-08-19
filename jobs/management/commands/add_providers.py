@@ -20,15 +20,6 @@ class Command(BaseCommand):
                     provider=Provider.objects.get(name = provider_name)
                     provider.hosts=hosts
                     provider.save()
-                # providers initially used class name so lets update those
-                except Provider.DoesNotExist:
-                    provider=Provider.objects.get(name = class_name)
-                    provider.hosts=hosts
-                    # update to attr name
-                    provider.name = provider_name
-                    provider.save()
-
-
                 except Provider.DoesNotExist:
                     provider=Provider(name=provider_name)
                     provider.hosts=hosts
