@@ -39,15 +39,18 @@ class JobAnalytics extends React.Component{
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
-        const {params} = this.props.match;
-        if (params['jobId'] !== prevProps.match['jobId'] && params['jobId'] !== this.state.filters.provider_id){
-            if (params['jobId'] !== undefined){
-                this.setState({filters: {...this.state.filters, provider_id: params['jobId']}},)
+        const {jobId} = this.props.match.params;
+        const prevJobId = prevProps.match.params['jobId'];
+        const currentJobId = this.state.filters.provider_id;
+        if (jobId !== prevJobId && jobId !== currentJobId){
+            let newFilters;
+            if (jobId !== undefined){
+                newFilters = {...this.state.filters, provider_id: jobId};
             } else {
-                const f = {...this.state.filters};
-                delete f['provider_id'];
-                this.setState({filters: f});
+                newFilters = {...this.state.filters};
+                delete newFilters['provider_id'];
             }
+            this.setState({filters: newFilters});
         }
         clearTimeout(this.timeout);
         if (this.state.filters !== prevState.filters || this.state.sorting !== prevState.sorting){
