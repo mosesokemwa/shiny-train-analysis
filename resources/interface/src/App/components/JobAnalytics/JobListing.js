@@ -21,10 +21,10 @@ class Listing extends React.PureComponent{
                                 />:null}
                             </td>
                             <td>{job['organization']}</td>
-                            <td>{job['location']}</td>
+                            <td>{job['city']?`${job['city']}, ${job['country']}`:''}</td>
                             <td>{job['type']}</td>
-                            <td>{moment(job['posted']).format('MMM Do')}</td>
-                            <td>{moment(job['deadline']).format('MMM Do')}</td>
+                            <td>{moment(job['posted']).format('MMM Do YYYY')}</td>
+                            <td>{moment(job['deadline']).format('MMM Do YYYY')}</td>
                             <td>
                                 <a href={job.url} target='_blank' rel='noreferrer noopener'>
                                     <button className='btn btn-primary'>
@@ -44,7 +44,7 @@ class Listing extends React.PureComponent{
 export default class JobListing extends React.PureComponent{
     render() {
         const {jobs, updateSort, sorting} = this.props;
-        const sortable_fields = ['id', 'title', 'organization', 'location', 'type', 'posted', 'deadline'];
+        const sortable_fields = ['id', 'title', 'organization', 'cities', 'type', 'posted', 'deadline'];
         const makeSort = (field)=>{
             if(sorting.sortBy!==field){
                 return sortable_fields.includes(field);
@@ -56,7 +56,7 @@ export default class JobListing extends React.PureComponent{
             ['id', '#', makeSort('id')],
             ['title', 'Title', makeSort('title')],
             ['organization', 'Company', makeSort('organization')],
-            ['location', 'Location', makeSort('location')],
+            ['cities', 'City', makeSort('cities')],
             ['type', 'Type', makeSort('type')],
             ['posted', 'Posted', makeSort('posted')],
             ['deadline', 'Deadline', makeSort('deadline')],

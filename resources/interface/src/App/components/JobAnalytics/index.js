@@ -2,9 +2,13 @@ import React from "react";
 import {connect} from "react-redux";
 import fetchJobs from "../../actions/fetchJobs";
 import JobListing from "./JobListing";
-import moment from "moment";
 import fetchTags from "../../actions/fetchTags";
 import ChooseFromList from "../fragments/chooseFromList";
+import DropDownCheckbox from "../fragments/DropDownCheckbox";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import moment from "moment";
+import fetchCities from "../../actions/fetchCities";
 
 class JobAnalytics extends React.Component{
     constructor(props) {
@@ -19,7 +23,7 @@ class JobAnalytics extends React.Component{
                 'Attachment'
             ],
             filters: {
-                deadline: (new moment()).format("YYYY-MM-DD")
+                deadline: moment().format("YYYY-MM-DD")
             },
             sorting: {
                 sortBy: 'id',
@@ -31,9 +35,20 @@ class JobAnalytics extends React.Component{
     componentDidMount() {
         this.props.fetchJobs(this.state.filters, this.state.sorting);
         this.props.fetchTags();
+        this.props.fetchCities();
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
+        const {params} = this.props.match;
+        if (params['jobId'] !== prevProps.match['jobId'] && params['jobId'] !== this.state.filters.provider_id){
+            if (params['jobId'] !== undefined){
+                this.setState({filters: {...this.state.filters, provider_id: params['jobId']}},)
+            } else {
+                const f = {...this.state.filters};
+                delete f['provider_id'];
+                this.setState({filters: f});
+            }
+        }
         clearTimeout(this.timeout);
         if (this.state.filters !== prevState.filters || this.state.sorting !== prevState.sorting){
             this.timeout = setTimeout(()=>this.props.fetchJobs(this.state.filters, this.state.sorting), 500)
@@ -54,6 +69,16 @@ class JobAnalytics extends React.Component{
         }
     }
 
+    updateExperience(experience) {
+        const filters = {...this.state.filters};
+        if (experience.length === 0){
+            delete filters['experience'];
+            this.setState({filters})
+        } else {
+            this.setState({filters: {...filters, experience}});
+        }
+    }
+
     toggleJobType(jobType) {
         const filters = this.state.filters;
         let types = [...(filters.types||[])];
@@ -71,10 +96,20 @@ class JobAnalytics extends React.Component{
         }
     }
 
+    updateDateValue(date, name) {
+        this.setState({filters: {...this.state.filters, [name]: moment(date).format("YYYY-MM-DD")}})
+    }
+
+    updateCities(cities) {
+        this.setState({filters: {...this.state.filters, cities : cities}})
+
+    }
+
     renderFilters(){
         const {jobTypes} = this.state;
-        const {tags} = this.props;
-        const {types, deadline, posted} = this.state.filters;
+        const {tags, cities} = this.props;
+        const {types, deadline, posted, experience} = this.state.filters;
+        const experienceOptions = ['Entry Level', 'Junior', 'Mid Level', 'Senior', 'Other (Not Specified)'];
         return (
             <div className='p-4'>
                 <div className='form-row'>
@@ -87,14 +122,28 @@ class JobAnalytics extends React.Component{
                         <input className='form-control' name='organization' placeholder='Company' onInput={event => this.updateValue(event)} />
                     </div>
                     <div className='form-group col-4'>
-                        <label>Location</label>
-                        <input className='form-control' name='location' placeholder='Location' onInput={event => this.updateValue(event)} />
+                        <label>City</label>
+                        <ChooseFromList
+                            withInput
+                            choices={cities}
+                            onChoose={cities=>this.updateCities(cities)}
+                        />
                     </div>
                     <div className='form-group col'>
                         <label>Technologies</label>
                         <ChooseFromList choices={tags} onChoose={(technologies)=>this.updateTechnologies(technologies)}/>
                     </div>
-                    <div className='form-group flex-wrap col'>
+                    <div className='form-group col d-none'>
+                        <label>&nbsp;</label>
+                        <div>
+                            <DropDownCheckbox
+                                title={'Professional Experience' + (experience?` ${experience.length}/${experienceOptions.length}`:'')}
+                                onChange={experience=>this.updateExperience(experience)}
+                                options={experienceOptions}
+                            />
+                        </div>
+                    </div>
+                    <div className='form-group flex-wrap col d-none'>
                         <div>
                             <label>Job Type</label>
                         </div>
@@ -118,12 +167,22 @@ class JobAnalytics extends React.Component{
                 <div className='form-row'>
                     <div className='form-group col-lg-3 col-md-3 col-sm-4 col-6'>
                         <label>Posted after</label>
-                        <input type='date' className='form-control' name='posted' value={posted} onInput={event =>this.updateValue(event)}/>
+                        <DatePicker
+                            className="form-control"
+                            selected={posted?(moment(posted, "YYYY-MM-DD")).toDate():null}
+                            onChange={date => this.updateDateValue(date, 'posted')}
+                            dateFormat="MMMM d, yyyy"
+                        />
                         <small className='form-text text-muted'>All jobs posted after this date.</small>
                     </div>
                     <div className='form-group col-lg-3 col-md-3 col-sm-4 col-6'>
                         <label>Deadline</label>
-                        <input type='date' className='form-control' name='deadline' value={deadline} onChange={event =>this.updateValue(event)}/>
+                        <DatePicker
+                            className="form-control"
+                            selected={(moment(deadline, "YYYY-MM-DD")).toDate()}
+                            onChange={date => this.updateDateValue(date, 'deadline')}
+                            dateFormat="MMMM d, yyyy"
+                        />
                         <small className='form-text text-muted'>All jobs before this deadline.</small>
                     </div>
                 </div>
@@ -132,11 +191,16 @@ class JobAnalytics extends React.Component{
     }
 
     render() {
-        const {jobs, isLoading} = this.props;
+        const {jobs, isLoading, providers, match} = this.props;
         const {sorting} = this.state;
+        const {jobId} = match.params;
+        const provider = providers.find(p => p.id === parseInt(jobId));
         return (
-            <div className='m-3 shadow-sm'>
-                {this.renderFilters()}
+            <div className='m-3 shadow'>
+                <h4 className='text-center p-2 m-0'>{provider?provider.name:'All '} Jobs</h4>
+                <div style={{borderTop: '1px solid rgba(221, 221, 221, 0.22)'}}>
+                    {this.renderFilters()}
+                </div>
                 <div style={{opacity: isLoading?0.5:1}}>
                     <JobListing
                         jobs={jobs}
@@ -153,7 +217,9 @@ function mapStateTopProps(state){
     return {
         jobs: state.jobs.data,
         tags: state.tags.data,
+        cities: state.cities.data,
+        providers: state.providers.data,
         isLoading: state.jobs.isLoading
     }
 }
-export default connect(mapStateTopProps, {fetchJobs, fetchTags})(JobAnalytics)
+export default connect(mapStateTopProps, {fetchJobs, fetchTags, fetchCities})(JobAnalytics)

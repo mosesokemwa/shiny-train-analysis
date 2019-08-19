@@ -1,0 +1,22 @@
+.provider-nav{
+    font-size: 1vw;
+    list-style: outside;
+}
+.sidebar{
+    transition: max-width 200ms ease-out;
+    z-index: 10;
+}
+@media only screen and (max-width: 992px)   {
+    .sidebar:hover {
+        max-width: 200px;
+    }
+    .sidebar:hover > ul {
+        text-align: left!important;
+    }
+    .sidebar:hover .d-none{
+        display: inline-block!important;
+    }
+    .sidebar:hover .d-none{
+        font-size: 12px;
+    }
+}

@@ -5,3 +5,15 @@ export const PASS_GET_JOBS = 'PASS_GET_JOBS';
 export const FIRE_GET_TAGS = 'FIRE_GET_TAGS';
 export const FAIL_GET_TAGS = 'FAIL_GET_TAGS';
 export const PASS_GET_TAGS = 'PASS_GET_TAGS';
+
+export const FIRE_GET_CITIES = 'FIRE_GET_CITIES';
+export const FAIL_GET_CITIES = 'FAIL_GET_CITIES';
+export const PASS_GET_CITIES = 'PASS_GET_CITIES';
+
+export const FIRE_GET_PROVIDERS = 'FIRE_GET_PROVIDERS';
+export const FAIL_GET_PROVIDERS = 'FAIL_GET_PROVIDERS';
+export const PASS_GET_PROVIDERS = 'PASS_GET_PROVIDERS';
+
+export const FIRE_GET_SYNC = 'FIRE_GET_SYNC';
+export const FAIL_GET_SYNC = 'FAIL_GET_SYNC';
+export const PASS_GET_SYNC = 'PASS_GET_SYNC';

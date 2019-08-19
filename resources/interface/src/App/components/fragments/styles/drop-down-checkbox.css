@@ -1,0 +1,36 @@
+.drop-down-checkbox-listing{
+    position: absolute;
+    outline: none;
+    display: none;
+    z-index: 100;
+    background-color: white;
+    top: 100%;
+    width: 100%;
+    opacity: 0;
+    transition: opacity 0.5s;
+}
+.drop-down-checkbox-title{
+    cursor: pointer;
+}
+.drop-down-checkbox:focus-within > .drop-down-checkbox-listing{
+    display: block;
+    opacity: 1;
+    white-space: nowrap;
+}
+.drop-down-checkbox-control *{
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    cursor: pointer;
+}
+.drop-down-checkbox-title > button {
+    outline: none;
+    box-shadow: none!important;
+}
+.drop-down-checkbox-listing-clear{
+    cursor: pointer;
+}
+.drop-down-checkbox-listing-clear:hover{
+    background-color: #ddd;
+}

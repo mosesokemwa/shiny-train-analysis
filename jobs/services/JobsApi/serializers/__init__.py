@@ -31,7 +31,7 @@ class SyncJobsSerializer:
         sql='''
         SELECT s.id as id, s.error as error, s.error_message as error_message, s.created_at as created_at
         FROM server_sync_jobs s
-        ORDER BY s.created_at
+        ORDER BY s.created_at DESC
         '''
         sql += ' LIMIT 1' if type(latest) == str  and latest.lower() == "true" else ""
         print(sql)

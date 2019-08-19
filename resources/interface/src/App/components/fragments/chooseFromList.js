@@ -20,25 +20,32 @@ export default class ChooseFromList extends React.Component{
         }
     }
 
+    toggleItem(item) {
+        this.input.focus();
+        const {chosen} = this.state;
+        if (chosen.includes(item)){
+            this.setState({value: '', chosen: chosen.filter(c=>c!==item)})
+        } else {
+            this.setState({value: '', chosen: [...chosen, item]})
+        }
+    }
+
     render() {
         const {chosen, value} = this.state;
         const {choices} = this.props;
         let available = [];
-        if (value!==''){
-            available = choices.filter(c=>(!chosen.includes(c))&&c.toLowerCase().startsWith(value.toLowerCase()));
-        }
+        available = choices.filter(c=>c.toLowerCase().startsWith(value.toLowerCase()));
         const chooseOne = () => {
             if (available.length === 1){
                 this.setState({value: '', chosen: [...chosen, available[0]]})
             }
         };
-
         return (
             <div className='position-relative'>
                 <div className='choice-input form-control d-flex m-0 flex-wrap' onClick={()=>this.input.focus()}>
                     {chosen.map(
                         (choice, idx) => (
-                            <span className='border rounded px-1 m-1 bg-light' key={idx}>
+                            <span className='border rounded px-1 mb-1 mr-1 bg-light' key={idx}>
                                 <span
                                     className='fa fa-times pointer'
                                     onClick={()=>this.setState({chosen: chosen.filter(c=>c!==choice)})}
@@ -58,24 +65,18 @@ export default class ChooseFromList extends React.Component{
                         onChange={({currentTarget})=>this.setState({value: currentTarget.value})}
                         ref={(input)=>this.input=input}
                     />
-                    {/*{value?*/}
                     <div className='input-suggestions bg-white rounded'>
-                        <table className='table table-hover border'>
-                            <tbody>
-                            {available.map(
-                                (item, index) => (
-                                    <tr
-                                        key={index} className='pointer'
-                                        onClick={()=>this.setState({value: '', chosen: [...chosen, item]})}
-                                    >
-                                        <td className='p-1'>{item}</td>
-                                    </tr>
-                                )
-                            )}
-                            </tbody>
-                        </table>
+                        {available.map(
+                            (item, index) => (
+                                <div
+                                    key={index} className='pointer hover-bg border border-top-0'
+                                    onClick={()=>this.toggleItem(item)}
+                                >
+                                    <div className='p-1'>{item} {chosen.includes(item)?<span className='fa fa-pull-right fa-dot-circle-o text-black-50'/>:null}</div>
+                                </div>
+                            )
+                        )}
                     </div>
-                    {/*:null}*/}
                 </div>
             </div>
         )

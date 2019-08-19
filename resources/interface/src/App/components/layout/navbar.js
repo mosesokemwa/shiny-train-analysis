@@ -14,11 +14,11 @@ export default class NavBar extends React.Component{
         return (
             <nav className={'navbar navbar-light bg-white border-bottom ' + (focused?'nav-hide-sibling':'')}>
                 <div className='form-group w-100 mb-1'>
-                    <div className='input-group w-100 ml-auto'>
+                    <div className='input-group w-100 ml-auto d-none'>
                         <input
                             onFocus={()=>this.setState({focused: true})}
                             onBlur={()=>this.setState({focused: false})}
-                            className='form-control w-50 rounded-0 fa'
+                            className='form-control w-50 rounded-0'
                             placeholder='&nbsp;&#xF002; Search anything in the Database'
                         />
                     </div>

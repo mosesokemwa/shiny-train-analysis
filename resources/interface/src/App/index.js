@@ -14,7 +14,7 @@ export default class App extends React.Component {
                     <Layout>
                         <Switch>
                             {/*<Route component={DashBoard} path='/' exact />*/}
-                            <Route component={JobAnalytics} path='/jobs/' />
+                            <Route component={JobAnalytics} path='/jobs/:jobId?' />
                             {/*<Route component={Companies} path='/companies/' />*/}
                             {/*<Route component={Statistics} path='/statistics/' />*/}
                         </Switch>
