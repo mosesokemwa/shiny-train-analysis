@@ -42,9 +42,12 @@ class ProvidersSerializer:
     db_handler=PostgresDBHandler()
     def get(self,filters):
         sql='''
-        select provider.id as id, provider.name as name, provider.hosts as hosts, provider.created_at as created_at
-        FROM providers provider ORDER BY provider.id
-        '''
+        select provider.id as id, provider.name as name, provider.hosts as hosts, COUNT(job.id) as job_count, provider.created_at as created_at
+        FROM providers provider 
+        INNER JOIN job_listings job ON provider.id = job.provider_id
+        GROUP BY provider.id
+        ORDER BY provider.id
+        ''';
         data =  self.db_handler.fetch_dict(sql,{},one=False)
         return data
 
