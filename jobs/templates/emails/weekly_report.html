@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+        table {
+        font-family: arial, sans-serif;
+        border-collapse: collapse;
+        width: 100%;
+        }
+
+        td, th {
+        border: 1px solid #dddddd;
+        text-align: left;
+        padding: 8px;
+        }
+
+        tr:nth-child(even) {
+        background-color: #dddddd;
+        }
+        .section {
+            margin: 55px 0 0 0;
+        }
+        </style>
+    </head>
+    <body>
+        <div class="head">
+
+        </div>
+        <h2>Weekly Jobs Board Report</h2>
+        <p>Your personalized report brought to you from your friendly infra team.</p>
+        <div class="new-job-posting section">
+            <h3>New Job Postings ({{seven_before}} to Present)</h3>
+            <table>
+                <tr>
+                    <th width="10%">Date Posted</th>
+                    <th>Title</th>
+                    <th>Company</th>
+                    <th>City</th>
+                    <th>Link</th>
+                </tr>
+                {% for job in jobs_new %}
+                <tr>
+                    <td widht="10%">{{job.date_posted}}</td>
+                    <td>{{job.title}}</td>
+                    <td>{{job.company}}</td>
+                    <td>{{job.city}}</td>
+                    <td><a href="{{job.link}}" alt="{{job.title}}" style="font-size: 0.9rem;">VIEW</a></td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+ 
+        <div class="new-company-jobs section">
+            <h3>Company New Job Postings ({{seven_before}} to Present)</h3>
+            {% for company, jobs in new_company_jobs.items %}
+            <div class="company-jobs">
+                <h4 style="margin-bottom: 0">{{company}}</h4>
+                <ul style="margin: 0">
+                {% for job in  jobs %}
+                    <li>{{job.title}} / {{job.deadline}} / <a href="{{job.link}}">link</a></li>
+                {% endfor %}
+                </ul>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="upcoming-deadline section">
+            <h3>Upcoming applications deadline (Present to {{seven_after}})</h3>
+            <table>
+                <tr>
+                    <th width="10%">Deadline</th>
+                    <th>Title</th>
+                    <th>Company</th>
+                    <th>City</th>
+                    <th>Link</th>
+                </tr>
+                {% for job in jobs_upcoming_deadlines %}
+                <tr>
+                    <td width="10%">{{job.deadline}}</td>
+                    <td>{{job.title}}</td>
+                    <td>{{job.company}}</td>
+                    <td>{{job.city}}</td>
+                    <td><a href="{{job.link}}" alt="{{job.title}}" style="font-size: 0.9rem;">VIEW</a></td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+
+  
+            <h4>
+                    Feedback, Questions, or Comments? Email <a href="infrastructure.team@moringaschool.com">infrastructure.team@moringaschool.com</a>
+            </h4>
+    </body>
+</html>
