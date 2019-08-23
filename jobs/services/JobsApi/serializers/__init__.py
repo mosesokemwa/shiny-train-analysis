@@ -114,7 +114,9 @@ class JobsApiSerializer:
                 if type(tech)==str and tech !="":
                     tech_filters.append(" job.technologies @> %("+"tech"+str(i)+")s::VARCHAR[255]")
                     params["tech"+str(i)]=[tech.lower()]
-            sql_filters.append(" OR ".join(tech_filters))
+                    
+            tech_sql=" OR ".join(tech_filters)
+            sql_filters.append("({tech_sql})".format(tech_sql=tech_sql))
 
         if cities != None and len(cities)>0:
             city_filters=[]
@@ -127,6 +129,7 @@ class JobsApiSerializer:
 
         if len(sql_filters)>0:
             sql+=" WHERE " +" AND ".join([i for i in sql_filters if type(i)==str and i!=""])
+
 
         sql+=" ORDER BY {sort_field} {order}".format(sort_field=sortable_fields[sortBy], order=order_options[orderBy])
         data= self.db_handler.fetch_dict(sql,params,one=False)
