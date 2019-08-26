@@ -2,24 +2,24 @@
 <html>
     <head>
         <style>
-        table {
-        font-family: arial, sans-serif;
-        border-collapse: collapse;
-        width: 100%;
-        }
+            table {
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+            }
 
-        td, th {
-        border: 1px solid #dddddd;
-        text-align: left;
-        padding: 8px;
-        }
+            td, th {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+            }
 
-        tr:nth-child(even) {
-        background-color: #dddddd;
-        }
-        .section {
-            margin: 55px 0 0 0;
-        }
+            tr:nth-child(even) {
+            background-color: #dddddd;
+            }
+            .section {
+                margin: 55px 0 0 0;
+            }
         </style>
     </head>
     <body>
@@ -48,10 +48,11 @@
                 </tr>
                 {% endfor %}
             </table>
+            <p> This table shows results for 'developer' and 'engineer' </p>
         </div>
  
         <div class="new-company-jobs section">
-            <h3>Company New Job Postings ({{seven_before}} to Present)</h3>
+            <h3>Companies That Have Posted Three(3) Or More Jobs Over The Past Week</h3>
             {% for company, jobs in new_company_jobs.items %}
             <div class="company-jobs">
                 <h4 style="margin-bottom: 0">{{company}}</h4>
@@ -84,11 +85,13 @@
                 </tr>
                 {% endfor %}
             </table>
+            <p> This table shows results for 'developer' and 'engineer' </p>
         </div>
-
-  
             <h4>
-                    Feedback, Questions, or Comments? Email <a href="infrastructure.team@moringaschool.com">infrastructure.team@moringaschool.com</a>
+                For the full Jobs Board <a href="https://jobs-board.labs.moringaschool.com/jobs/">click here</a>
+            </h4>
+            <h4>
+                Feedback, Questions, or Comments? Email <a href="mailto:infrastructure.team@moringaschool.com">infrastructure.team@moringaschool.com</a>
             </h4>
     </body>
 </html>

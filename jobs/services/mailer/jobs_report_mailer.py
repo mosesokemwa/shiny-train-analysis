@@ -30,12 +30,12 @@ class JobsMailer(AbstractJobsMailer):
         jobs_new = []
         for job in new_jobs_filtered_by_titles:
             jobs_new.append({
-                "date_posted":job.date_posted.strftime("%Y-%m-%d"),
+                "date_posted":job.date_posted.strftime("%d %b %Y"),
                 "title":job.title,
                 "company":job.hiring_organization.name if job.hiring_organization else "",
                 "city":job.city,
                 "link":job.url
-            })
+            }) 
             
         new_company_jobs ={}
         for job in new_jobs:
