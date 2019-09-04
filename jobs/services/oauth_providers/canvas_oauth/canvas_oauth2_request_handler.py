@@ -60,7 +60,7 @@ class CanvasOauth2RequestHandler(AbstractOauth2RequestHandler):
         try:
             canvas_token = CanvasOauthToken.objects.get(canvas_id=str(response["user"]["id"]))
         except CanvasOauthToken.DoesNotExist:
-            canvas_token = CanvasOauthToken()
+            canvas_token = CanvasOauthToken(canvas_id=str(response["user"]["id"]))
             user,_ = User.objects.get_or_create(username=response["user"]["name"])
             # short name
             user.first_name = response["user"]["name"]
