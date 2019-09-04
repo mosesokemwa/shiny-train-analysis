@@ -1,0 +1,11 @@
+export const FIRE_POST_AUTH = "FIRE_POST_AUTH";
+export const FAIL_POST_AUTH = "FAIL_POST_AUTH";
+export const PASS_POST_AUTH = "PASS_POST_AUTH";
+
+export const FIRE_CHECK_AUTH = "FIRE_CHECK_AUTH";
+export const FAIL_CHECK_AUTH = "FAIL_CHECK_AUTH";
+export const PASS_CHECK_AUTH = "PASS_CHECK_AUTH";
+
+export const FIRE_DELETE_AUTH = "FIRE_DELETE_AUTH";
+export const FAIL_DELETE_AUTH = "FAIL_DELETE_AUTH";
+export const PASS_DELETE_AUTH = "PASS_DELETE_AUTH";
