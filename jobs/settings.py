@@ -29,7 +29,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'corsheaders',
     'rest_framework',
-    'jobs'
+    'jobs',
+    'jobs.services.oauth_providers.canvas_oauth',
+    'jobs.services.oauth_providers.google_oauth2',
 ]
 
 MIDDLEWARE = [
@@ -116,23 +118,33 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
 
+# REST FRAMEWORK
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        # 'rest_framework.authentication.BasicAuthentication',
+        # 'rest_framework.authentication.SessionAuthentication',
+        'jobs.services.oauth_providers.canvas_oauth.authentication.CanvasAuthentication',
+        'jobs.services.oauth_providers.google_oauth2.authentication.GoogleOauth2Authentication'
+    ]
+}
+
 
 # logging
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'handlers': {
-        'console': {
-            'class': 'logging.StreamHandler',
-        },
-    },
-    'loggers': {
-        'django': {
-            'handlers': ['console'],
-            'level': config('DJANGO_LOG_LEVEL', 'DEBUG'),
-        },
-    },
-}
+# LOGGING = {
+#     'version': 1,
+#     'disable_existing_loggers': False,
+#     'handlers': {
+#         'console': {
+#             'class': 'logging.StreamHandler',
+#         },
+#     },
+#     'loggers': {
+#         'django': {
+#             'handlers': ['console'],
+#             'level': config('DJANGO_LOG_LEVEL', 'DEBUG'),
+#         },
+#     },
+# }
 
 ## CORS
 CORS_ORIGIN_ALLOW_ALL=config('CORS_ORIGIN_ALLOW_ALL', default=False,cast=bool)
@@ -142,3 +154,15 @@ SENDGRID_API_KEY = config('SENDGRID_API_KEY')
 ## weekly jobs report
 WEEKLY_JOBS_REPORT_SENDERS_EMAIL = config("WEEKLY_JOBS_REPORT_SENDERS_EMAIL")
 WEEKLY_JOBS_REPORT_SENDERS_RECEPEINTS = config("WEEKLY_JOBS_REPORT_SENDERS_RECEPEINTS",cast=Csv())
+
+# canvas oauth2
+CANVAS_SECRET= config("CANVAS_SECRET")
+CANVAS_CLIENTID= config("CANVAS_CLIENTID")
+CANVAS_INSTANCE= config("CANVAS_INSTANCE")
+CANVAS_REDIRECT= config("CANVAS_REDIRECT")
+
+# google oauth2
+GOOGLE_CLIENT_ID = config('GOOGLE_CLIENT_ID')
+GOOGLE_CLIENT_SECRET = config('GOOGLE_CLIENT_SECRET')
+GOOGLE_COMPANY_DOMAIN = config('GOOGLE_COMPANY_DOMAIN')
+GOOGLE_REDIRECT_URI = config('GOOGLE_REDIRECT_URI')
