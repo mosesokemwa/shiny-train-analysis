@@ -80,4 +80,5 @@ class JobsMailer(AbstractJobsMailer):
         html_content=self.render.parse_mail_html_mail_template("emails/weekly_report.html", context)
         from_email = settings.WEEKLY_JOBS_REPORT_SENDERS_EMAIL
         to_emails = settings.WEEKLY_JOBS_REPORT_SENDERS_RECEPEINTS
+        print(to_emails)
         self.mailer.send(from_email,to_emails, "Weekly Jobs Board Report {td}".format(td=today.strftime("%d %b %Y")), html_content, message_type="html")
