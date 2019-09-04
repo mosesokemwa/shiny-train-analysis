@@ -8,6 +8,13 @@ from .JobWebKenyaProvider import JobWebKenyaProvider
 from .GlassDoorProvider import GlassDoorProvider
 from .JobWebRwandaProvider import JobWebRwandaProvider
 from .RwandaJobProvider import RwandaJobProvider
+from .Careers24Provider import Careers24Provider
+from .BestJobsProvider import BestJobsProvider
+from .EmergeProvider import EmergeProvider
+from .GigaJobProvider import GigaJobProvider
+from .JobMailProvider import JobMailProvider
+from .PNetProvider import PNetProvider
+from .JobVineProvider import JobVineProvider
 
 provider_abstract = AbstractProvider.__subclasses__()
 providers = {}
