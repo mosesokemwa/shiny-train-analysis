@@ -21,5 +21,5 @@ from django.conf.urls import url, include
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/',include('jobs.views.urls')),
-    path('auth/',include('jobs.services.oauth_providers.urls')),
+    path('api/auth/',include('jobs.services.oauth_providers.urls')),
 ]
