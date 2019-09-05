@@ -63,6 +63,7 @@ class JobsApiSerializer:
     def filter(self, filters):
         posted=dateutil.parser.parse(filters.get("posted")) if filters.get("posted",default=None) != None else None
         deadline=dateutil.parser.parse(filters.get("deadline")) if filters.get("deadline",default=None) != None else None
+        deadline_blank=filters.get("deadlineBlank",default=None)
         job_title=filters.get("title",default=None)
         cities=filters.getlist("cities[]",default=None)
         organization=filters.get("organization",default=None)
@@ -92,7 +93,10 @@ class JobsApiSerializer:
             sql_filters.append("date(job.date_posted) >= date(%(posted)s)")
             params["posted"]=posted.date().strftime("%Y-%m-%d")
         if deadline !=None:
-            sql_filters.append("date(job.valid_to) >= date(%(deadline)s)")
+            deadline_filter = "date(job.valid_to) >= date(%(deadline)s)"
+            if deadline_blank !=None:
+                deadline_filter = f" ( {deadline_filter} OR job.valid_to is null )"
+            sql_filters.append(deadline_filter)
             params["deadline"]=deadline.date().strftime("%Y-%m-%d")
 
         if organization != None:

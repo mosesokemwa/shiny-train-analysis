@@ -23,7 +23,8 @@ class JobAnalytics extends React.Component{
                 'Attachment'
             ],
             filters: {
-                deadline: moment().format("YYYY-MM-DD")
+                deadline: moment().format("YYYY-MM-DD"),
+                deadlineBlank: true
             },
             sorting: {
                 sortBy: 'id',
@@ -33,7 +34,13 @@ class JobAnalytics extends React.Component{
     }
 
     componentDidMount() {
-        this.props.fetchJobs(this.state.filters, this.state.sorting);
+        const {jobId} = this.props.match.params;
+        const doFetch = () => this.props.fetchJobs(this.state.filters, this.state.sorting);
+         if (jobId !== undefined){
+             this.setState({...this.state,filters: {...this.state.filters, provider_id: jobId}}, doFetch);
+         } else {
+             doFetch()
+         }
         this.props.fetchTags();
         this.props.fetchCities();
     }
@@ -108,10 +115,22 @@ class JobAnalytics extends React.Component{
 
     }
 
+    toggleDeadlineBlank() {
+        const {deadlineBlank} = this.state.filters;
+        console.log(deadlineBlank);
+        const f = {...this.state.filters};
+        if (deadlineBlank){
+            delete f['deadlineBlank'];
+            this.setState({filters: f})
+        } else {
+            this.setState({filters: {...f, deadlineBlank: true}})
+        }
+    }
+
     renderFilters(){
         const {jobTypes} = this.state;
         const {tags, cities} = this.props;
-        const {types, deadline, posted, experience} = this.state.filters;
+        const {types, deadline, posted, experience, deadlineBlank} = this.state.filters;
         const experienceOptions = ['Entry Level', 'Junior', 'Mid Level', 'Senior', 'Other (Not Specified)'];
         return (
             <div className='p-4'>
@@ -186,7 +205,11 @@ class JobAnalytics extends React.Component{
                             onChange={date => this.updateDateValue(date, 'deadline')}
                             dateFormat="MMMM d, yyyy"
                         />
-                        <small className='form-text text-muted'>All jobs before this deadline.</small>
+                        <small className='form-text text-muted'>All jobs valid after this deadline.</small>
+                        <div className="custom-control custom-checkbox small text-muted">
+                            <input type="checkbox" checked={!!deadlineBlank} className="custom-control-input" id="unknownDeadline" onChange={()=>this.toggleDeadlineBlank()}/>
+                            <label className="custom-control-label pt-1" htmlFor="unknownDeadline">Unknown Deadline</label>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -38,7 +38,7 @@ class PostgresScraperStorageHandler(AbstractScraperStorageHandler):
                 technologies=[i for i in job["technologies"] if type(i)==str and i !=""] if job["technologies"] != None else None,
                 employment_type=job["employment_type"],
                 date_posted=dateutil.parser.parse(job["date_posted"]),
-                valid_to=dateutil.parser.parse(job["valid_through"]),
+                valid_to=dateutil.parser.parse(job["valid_through"]) if job["valid_through"] is not None else None,
                 url=job["url"],
                 industry=job["industry"] if type(job["industry"]) == str else None,
                 description=job["description"] if type(job["description"]) == str else "",

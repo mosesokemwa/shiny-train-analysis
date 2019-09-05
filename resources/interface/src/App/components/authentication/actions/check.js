@@ -22,7 +22,7 @@ export default function () {
         xhr.get(endpoints.API_AUTH_CHECK)
             .then(({data})=>dispatch(passCheckAuth({isAuthenticated: true, user: data})))
             .catch((error)=>{
-                if (error.response.status === 403){
+                if (error.response && error.response.status === 403){
                     dispatch(passCheckAuth({isAuthenticated: false, user: null}));
                 } else {
                     dispatch(failCheckAuth(error.message))

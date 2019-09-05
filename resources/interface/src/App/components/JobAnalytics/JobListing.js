@@ -24,7 +24,7 @@ class Listing extends React.PureComponent{
                             <td>{job['city']?`${job['city']}, ${job['country']}`:''}</td>
                             <td>{job['type']}</td>
                             <td>{moment(job['posted']).format('MMM Do YYYY')}</td>
-                            <td>{moment(job['deadline']).format('MMM Do YYYY')}</td>
+                            <td>{job['deadline']?moment(job['deadline']).format('MMM Do YYYY'):'Unknown'}</td>
                             <td>
                                 <a href={job.url} target='_blank' rel='noreferrer noopener'>
                                     <button className='btn btn-primary'>
