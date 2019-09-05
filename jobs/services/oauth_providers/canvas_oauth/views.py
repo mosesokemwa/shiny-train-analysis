@@ -7,7 +7,7 @@ from .canvas_oauth2_request_handler import CanvasOauth2RequestHandler
 canvas_oauth_handler = CanvasOauth2RequestHandler()
 
 class CanvasLoginApiView(APIView):
-    permission_classes = [AllowAny]
+    permission_classes = [AllowAny,]
     def get(self,request,*args, **kwargs):
         code =request.GET.get("code",None)
         if code  != None:

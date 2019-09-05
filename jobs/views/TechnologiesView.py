@@ -8,7 +8,6 @@ from jobs.services.oauth_providers.google_oauth2.authentication import GoogleOau
 
 class TechnologiesView(APIView):
     serializer=TechnologiesSerializer()
-    authentication_classes = [CanvasAuthentication,GoogleOauth2Authentication]
     permission_classes = [IsAuthenticated,]
 
     def get(self,request):
