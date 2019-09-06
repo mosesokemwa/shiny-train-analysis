@@ -4,8 +4,10 @@ import tagsReducer from "./tagsReducer";
 import citiesReducer from "./citiesReducer";
 import providersReducer from "./providersReducer";
 import syncReducer from "./syncReducer";
+import {authentication} from "../components/authentication/reducers";
 
 export default combineReducers({
+    authentication,
     jobs: jobsReducer,
     tags: tagsReducer,
     cities: citiesReducer,

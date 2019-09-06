@@ -1,6 +1,13 @@
 default_providers_list = {
     # scrapes .co.uk in production
     #"glassdoor-rw": "https://www.glassdoor.com/Job/rwanda-jobs-SRCH_IL.0,6_IN206.htm",
+    "jobvine": "http://www.jobvine.co.za/jobs/sector/it-telecoms-jobs/",
+    "pnet": "https://www.pnet.co.za/jobs/IT-Telecommunications.html?li=100",
+    "careers24": "https://www.careers24.com/jobs/se-it/?pagesize=100&sort=dateposted",
+    "bestjobs": "https://www.bestjobs.co.za/jobs-of-computers-telecommunication",
+    "emerge": "https://www.e-merge.co.za/careers/",
+    "gigajob": "https://en-za.gigajob.com/Computer-jobs-in-South-Africa",
+    "job-mail": "https://www.jobmail.co.za/browse-jobs/all-regions/it-computer/all-sub-industries/all-jobs/page1",
     "jobwebkenya": "https://jobwebkenya.com/job-category/ittelecom-jobs-in-kenya-2013/",
     "rwandajob": "https://www.rwandajob.com/job-vacancies-search-rwanda?f%5B0%5D=im_field_offre_secteur%3A133",
     "fuzu-it-software": "https://www.fuzu.com/categories/it-software",
