@@ -69,6 +69,8 @@ class JobsApiSerializer:
         organization=filters.get("organization",default=None)
         technologies=filters.getlist("tags[]",default=None)
         provider_id = filters.get("provider_id",default=None)
+        page_size = int(filters.get("page_size", default=100))
+        page = int(filters.get("page", default=1))
         sortable_fields={'id':'job.id', 'title':'job.title', 'organization':'hiring_organization.name',
                         'cities':'job.city', 'type':'job.employment_type', 'posted':'job.date_posted', 'deadline':'job.valid_to'}
         order_options={"asc":"ASC","desc":"DESC"}
@@ -133,8 +135,7 @@ class JobsApiSerializer:
 
         if len(sql_filters)>0:
             sql+=" WHERE " +" AND ".join([i for i in sql_filters if type(i)==str and i!=""])
-
-
         sql+=" ORDER BY {sort_field} {order}".format(sort_field=sortable_fields[sortBy], order=order_options[orderBy])
+        sql += " LIMIT {page_size} OFFSET {offset}".format(page_size=page_size, offset=(page-1)*page_size)
         data= self.db_handler.fetch_dict(sql,params,one=False)
         return data
