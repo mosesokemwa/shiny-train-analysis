@@ -89,6 +89,19 @@ class JobsApiSerializer:
         FROM job_listings job
         INNER JOIN hiring_organizations hiring_organization ON hiring_organization.id = job.hiring_organization_id
         '''
+        count_sql='''
+        SELECT COUNT(job.id) FROM job_listings job
+        INNER JOIN hiring_organizations hiring_organization ON hiring_organization.id = job.hiring_organization_id
+        '''
+        count_params={}
+
+        if provider_id !=None:
+            count_sql +=' WHERE job.provider_id= %(provider_id)s'
+            count_params.update({"provider_id":provider_id})
+
+        count=self.db_handler.fetch(count_sql,count_params,one=True)
+        if count and len(count)==1:
+            count=count[0]
         params={}
         sql_filters=[]
         if posted !=None:
@@ -118,8 +131,10 @@ class JobsApiSerializer:
             # @todo find a better method
             for i,tech in enumerate(technologies):
                 if type(tech)==str and tech !="":
-                    tech_filters.append(" job.technologies @> %("+"tech"+str(i)+")s::VARCHAR[255]")
-                    params["tech"+str(i)]=[tech.lower()]
+                    # tech_filters.append(" job.technologies @> %("+"tech"+str(i)+")s::VARCHAR[255]")
+                    # params["tech"+str(i)]=[tech.lower()]
+                    tech_filters.append("%("+"tech"+str(i)+")s::VARCHAR = ANY(job.technologies)")
+                    params["tech"+str(i)]=tech.lower()
                     
             tech_sql=" OR ".join(tech_filters)
             sql_filters.append("({tech_sql})".format(tech_sql=tech_sql))
@@ -137,5 +152,8 @@ class JobsApiSerializer:
             sql+=" WHERE " +" AND ".join([i for i in sql_filters if type(i)==str and i!=""])
         sql+=" ORDER BY {sort_field} {order}".format(sort_field=sortable_fields[sortBy], order=order_options[orderBy])
         sql += " LIMIT {page_size} OFFSET {offset}".format(page_size=page_size, offset=(page-1)*page_size)
+        # print(sql%params)
         data= self.db_handler.fetch_dict(sql,params,one=False)
-        return data
+        return {"data":data,"count":count,"page":page}
+
+
