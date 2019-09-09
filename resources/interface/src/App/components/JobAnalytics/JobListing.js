@@ -4,14 +4,14 @@ import "./job-listing.css"
 
 class Listing extends React.PureComponent{
     render() {
-        const {jobs} = this.props;
+        const {jobs, offset} = this.props;
         return (
             <tbody>
             {
                 jobs.map(
-                    job => (
-                        <tr key={Math.random()}>
-                            <td>{job['id']}</td>
+                    (job, pos) => (
+                        <tr key={pos}>
+                            <td>{pos + 1 + offset}</td>
                             <td className='position-relative'>
                                 <span className='mr-2'>{job['title']}</span>
                                 {job['skills']!==null?<i
@@ -43,7 +43,7 @@ class Listing extends React.PureComponent{
 
 export default class JobListing extends React.PureComponent{
     render() {
-        const {jobs, updateSort, sorting} = this.props;
+        const {jobs, updateSort, sorting, offset} = this.props;
         const sortable_fields = ['id', 'title', 'organization', 'cities', 'type', 'posted', 'deadline'];
         const makeSort = (field)=>{
             if(sorting.sortBy!==field){
@@ -88,7 +88,7 @@ export default class JobListing extends React.PureComponent{
                         }
                     </tr>
                     </thead>
-                    <Listing jobs={jobs}/>
+                    <Listing jobs={jobs} offset={offset}/>
                 </table>
             </div>
         )

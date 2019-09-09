@@ -89,19 +89,7 @@ class JobsApiSerializer:
         FROM job_listings job
         INNER JOIN hiring_organizations hiring_organization ON hiring_organization.id = job.hiring_organization_id
         '''
-        count_sql='''
-        SELECT COUNT(job.id) FROM job_listings job
-        INNER JOIN hiring_organizations hiring_organization ON hiring_organization.id = job.hiring_organization_id
-        '''
-        count_params={}
 
-        if provider_id !=None:
-            count_sql +=' WHERE job.provider_id= %(provider_id)s'
-            count_params.update({"provider_id":provider_id})
-
-        count=self.db_handler.fetch(count_sql,count_params,one=True)
-        if count and len(count)==1:
-            count=count[0]
         params={}
         sql_filters=[]
         if posted !=None:
@@ -151,9 +139,17 @@ class JobsApiSerializer:
         if len(sql_filters)>0:
             sql+=" WHERE " +" AND ".join([i for i in sql_filters if type(i)==str and i!=""])
         sql+=" ORDER BY {sort_field} {order}".format(sort_field=sortable_fields[sortBy], order=order_options[orderBy])
-        sql += " LIMIT {page_size} OFFSET {offset}".format(page_size=page_size, offset=(page-1)*page_size)
+
+        count_sql = f'''SELECT COUNT(job_data) FROM ({sql}) job_data'''
+
+        count = self.db_handler.fetch(count_sql, params, one=True)
+        if count and len(count) == 1:
+            count = count[0]
+
+        sql += " LIMIT {page_size} OFFSET {offset}".format(page_size=page_size, offset=(page - 1) * page_size)
         # print(sql%params)
-        data= self.db_handler.fetch_dict(sql,params,one=False)
+        data = self.db_handler.fetch_dict(sql, params, one=False)
+
         return {"data":data,"count":count,"page":page}
 
 
