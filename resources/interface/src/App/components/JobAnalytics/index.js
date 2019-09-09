@@ -54,9 +54,9 @@ class JobAnalytics extends React.Component{
         if (jobId !== prevJobId && jobId !== currentJobId){
             let newFilters;
             if (jobId !== undefined){
-                newFilters = {...this.state.filters, provider_id: jobId};
+                newFilters = {...this.state.filters, provider_id: jobId, page: 1};
             } else {
-                newFilters = {...this.state.filters};
+                newFilters = {...this.state.filters, page: 1};
                 delete newFilters['provider_id'];
             }
             this.setState({filters: newFilters});
