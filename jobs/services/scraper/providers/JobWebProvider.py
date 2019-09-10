@@ -1,13 +1,12 @@
-
 from urllib.parse import urljoin
 from jobs.models import JobsList
 from jobs.services.scraper.providers.AbstractTokenProvider import AbstractTokenProvider
 from .AbstractHTMLProvider import AbstractHTMLProvider
 
 
-class JobWebRwandaProvider(AbstractHTMLProvider, AbstractTokenProvider):
-    name = "Jobweb Rwanda"
-    host = 'jobwebrwanda.com'
+class JobWebProvider(AbstractHTMLProvider, AbstractTokenProvider):
+    name = "Job Web"
+    host = ['jobwebkenya.com', 'jobwebghana.com', 'jobwebrwanda.com']
     urls_xpath = '//ol/li/div[2]/strong/a'
     properties = {}
 
@@ -22,7 +21,7 @@ class JobWebRwandaProvider(AbstractHTMLProvider, AbstractTokenProvider):
             try:
                 page_buffer.append(self.get_job(job_link))
             except:
-                print("Error Proccessing %s "%job_link)
+                print("Error Processing %s "%job_link)
 
         page = 2
         while len(page_buffer) > 0:
@@ -36,7 +35,7 @@ class JobWebRwandaProvider(AbstractHTMLProvider, AbstractTokenProvider):
                 try:
                     page_buffer.append(self.get_job(job_link))
                 except:
-                    print("Error Proccessing %s " % job_link)
+                    print("Error Processing %s " % job_link)
 
             print("Scraped page %s" % page)
             page += 1

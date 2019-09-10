@@ -4,9 +4,8 @@ from .BrighterMondayProvider import BrighterMondayProvider
 from .CareerPointProvider import CareerPointProvider
 from .FuzuProvider import FuzuProvider
 from .PigiaMeProvider import PigiaMeProvider
-from .JobWebKenyaProvider import JobWebKenyaProvider
+from .JobWebProvider import JobWebProvider
 from .GlassDoorProvider import GlassDoorProvider
-from .JobWebRwandaProvider import JobWebRwandaProvider
 from .RwandaJobProvider import RwandaJobProvider
 from .Careers24Provider import Careers24Provider
 from .BestJobsProvider import BestJobsProvider
@@ -15,6 +14,8 @@ from .GigaJobProvider import GigaJobProvider
 from .JobMailProvider import JobMailProvider
 from .PNetProvider import PNetProvider
 from .JobVineProvider import JobVineProvider
+from .JobsInGhanaProvider import JobsInGhanaProvider
+from .JobberManProvider import JobberManProvider
 
 provider_abstract = AbstractProvider.__subclasses__()
 providers = {}

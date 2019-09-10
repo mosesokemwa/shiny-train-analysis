@@ -16,7 +16,7 @@ class AbstractScraperStorageHandler(abc.ABC):
 class PostgresScraperStorageHandler(AbstractScraperStorageHandler):
 
     def store(self,results)->bool:
-        provider_name = provider_name = providers[results[0]].name if hasattr(providers[results[0]],"name") else providers[results[0]].__class__.__name__
+        provider_name = providers[results[0]].name if hasattr(providers[results[0]],"name") else providers[results[0]].__class__.__name__
         provider=Provider.objects.get(name=provider_name)
         for job in results[1]:
             try:
@@ -37,7 +37,7 @@ class PostgresScraperStorageHandler(AbstractScraperStorageHandler):
                 skills= [i for i in job["skills"].split("\n") if i != "" and type(i) == str ] if job["skills"] != None else None,
                 technologies=[i for i in job["technologies"] if type(i)==str and i !=""] if job["technologies"] != None else None,
                 employment_type=job["employment_type"],
-                date_posted=dateutil.parser.parse(job["date_posted"]),
+                date_posted=dateutil.parser.parse(job["date_posted"]) if job["date_posted"] is not None else None,
                 valid_to=dateutil.parser.parse(job["valid_through"]) if job["valid_through"] is not None else None,
                 url=job["url"],
                 industry=job["industry"] if type(job["industry"]) == str else None,

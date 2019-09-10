@@ -63,7 +63,7 @@ class JobAnalytics extends React.Component{
         }
         clearTimeout(this.timeout);
         if (this.state.filters !== prevState.filters || this.state.sorting !== prevState.sorting){
-            this.timeout = setTimeout(()=>this.props.fetchJobs(this.state.filters, this.state.sorting), 500)
+            this.timeout = setTimeout(()=>this.props.fetchJobs(this.state.filters, this.state.sorting), 300)
         }
     }
 

@@ -1,3 +1,6 @@
 .hover-dark:hover{
     color: black!important;
 }
+.page-item.active .page-link{
+    z-index: 0;
+}

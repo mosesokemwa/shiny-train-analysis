@@ -20,7 +20,7 @@ class AbstractHTMLProvider(AbstractProvider):
     def get_job(self, job_url: str) -> Job:
         print("Fetching Job: {}".format(job_url))
         content = self.get_page(job_url).content
-        tree = fromstring(content.decode())
+        tree = fromstring(content)
         job_dict = {}
 
         for key, value in self.get_properties().items():
@@ -44,7 +44,7 @@ class AbstractHTMLProvider(AbstractProvider):
 
     def get_jobs_list(self, entry_url: str) -> Generator:
         content = self.get_page(entry_url).content
-        tree = fromstring(content.decode())
+        tree = fromstring(content)
         matches = tree.xpath(self.get_urls_xpath())
         for match in matches:
             job_url = urljoin(entry_url, match.attrib['href'])

@@ -1,7 +1,10 @@
 default_providers_list = {
     # scrapes .co.uk in production
     #"glassdoor-rw": "https://www.glassdoor.com/Job/rwanda-jobs-SRCH_IL.0,6_IN206.htm",
+    "jobberman": "https://www.jobberman.com.gh/jobs/internet-telecoms",
     "jobvine": "http://www.jobvine.co.za/jobs/sector/it-telecoms-jobs/",
+    "jobwebghana": "https://jobwebghana.com/job-category/it-telecom-jobs-in-ghana/",
+    "jobsinghana": "https://www.jobsinghana.com/jobs/indexnew.php?device=d&cat=31",
     "pnet": "https://www.pnet.co.za/jobs/IT-Telecommunications.html?li=100",
     "careers24": "https://www.careers24.com/jobs/se-it/?pagesize=100&sort=dateposted",
     "bestjobs": "https://www.bestjobs.co.za/jobs-of-computers-telecommunication",
