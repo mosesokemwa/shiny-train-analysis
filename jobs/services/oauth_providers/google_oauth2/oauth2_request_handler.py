@@ -35,7 +35,9 @@ class GoogleOuth2RequestHandler(AbstractOauth2RequestHandler):
    
     def decode_jwt(self, id_token):
         try:
-            return json.loads(base64.decodestring(id_token.split('.')[1].encode()).decode())
+            info = id_token.split('.')[1].encode()
+            info += b'=' * (4 - (len(info) % 4))
+            return json.loads(base64.decodestring(info).decode())
         except Exception as e:
             raise exceptions.APIException("Unable to decode jwt")
 

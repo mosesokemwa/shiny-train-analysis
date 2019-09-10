@@ -75,4 +75,5 @@ class Careers24Provider(AbstractHTMLProvider):
         valid_through = datetime.strptime(job_dict['valid_through'], '%A, %B %d, %Y')
         valid_through = self.timezone.localize(valid_through)
         job_dict['valid_through'] = str(valid_through)
+        job_dict['url'] = job_dict['url'].split('?')[0]
         return job_dict

@@ -24,7 +24,9 @@ class JobAnalytics extends React.Component{
             ],
             filters: {
                 deadline: moment().format("YYYY-MM-DD"),
-                deadlineBlank: true
+                deadlineBlank: true,
+                page_size: 25,
+                page: 1
             },
             sorting: {
                 sortBy: 'id',
@@ -36,11 +38,11 @@ class JobAnalytics extends React.Component{
     componentDidMount() {
         const {jobId} = this.props.match.params;
         const doFetch = () => this.props.fetchJobs(this.state.filters, this.state.sorting);
-         if (jobId !== undefined){
-             this.setState({...this.state,filters: {...this.state.filters, provider_id: jobId}}, doFetch);
-         } else {
-             doFetch()
-         }
+        if (jobId !== undefined){
+            this.setState({...this.state,filters: {...this.state.filters, provider_id: jobId}}, doFetch);
+        } else {
+            doFetch()
+        }
         this.props.fetchTags();
         this.props.fetchCities();
     }
@@ -52,16 +54,16 @@ class JobAnalytics extends React.Component{
         if (jobId !== prevJobId && jobId !== currentJobId){
             let newFilters;
             if (jobId !== undefined){
-                newFilters = {...this.state.filters, provider_id: jobId};
+                newFilters = {...this.state.filters, provider_id: jobId, page: 1};
             } else {
-                newFilters = {...this.state.filters};
+                newFilters = {...this.state.filters, page: 1};
                 delete newFilters['provider_id'];
             }
             this.setState({filters: newFilters});
         }
         clearTimeout(this.timeout);
         if (this.state.filters !== prevState.filters || this.state.sorting !== prevState.sorting){
-            this.timeout = setTimeout(()=>this.props.fetchJobs(this.state.filters, this.state.sorting), 500)
+            this.timeout = setTimeout(()=>this.props.fetchJobs(this.state.filters, this.state.sorting), 300)
         }
     }
 
@@ -117,7 +119,6 @@ class JobAnalytics extends React.Component{
 
     toggleDeadlineBlank() {
         const {deadlineBlank} = this.state.filters;
-        console.log(deadlineBlank);
         const f = {...this.state.filters};
         if (deadlineBlank){
             delete f['deadlineBlank'];
@@ -211,6 +212,68 @@ class JobAnalytics extends React.Component{
                             <label className="custom-control-label pt-1" htmlFor="unknownDeadline">Unknown Deadline</label>
                         </div>
                     </div>
+                    <div className='form-row'>
+                        <div className='form-group'>
+                            <label>Page limit</label>
+                            <select onChange={e => this.updateValue(e)} name='page_size' className='custom-select'>
+                                <option key={25}>25</option>
+                                <option key={50}>50</option>
+                                <option key={75}>75</option>
+                                <option key={100}>100</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        )
+    }
+
+    toPage(page) {
+        if (page !== this.state.filters.page) {
+            return this.setState({filters: {...this.state.filters, page}});
+        }
+    }
+
+    renderPagination(){
+        const {count, page, jobs} = this.props;
+        const size = this.state.filters.page_size || 100;
+        const last = Math.ceil(count / size);
+        const pages = [1, '...', page-1, page, page+1, '...', last];
+        if (page === 1){
+            pages.splice(0, 3)
+        }
+        if (page === 2){
+            pages.splice(0, 2)
+        }
+        if (page === (last-1)){
+            pages.splice(-2, 2)
+        }
+        if (page === last){
+            pages.splice(-3, 3)
+        }
+        return (
+            <div className='p-2 d-flex justify-content-between'>
+                <ul className='pagination'>
+                    {page === 1?null:(
+                        <>
+                            <li className='page-item'>
+                                <div className='page-link pointer' onClick={()=>this.toPage(page-1)}>«</div>
+                            </li>
+                        </>
+                    )}
+                    {pages.map((pg, c) =>
+                        <li key={c} className={'page-item ' + (pg===page?'active':'')}>
+                            <div className='page-link pointer' onClick={()=>(pg!=='...'?this.toPage(pg):null)}>{pg}</div>
+                        </li>
+                    )}
+                    {page === last?null:(
+                        <li className='page-item'>
+                            <div className='page-link pointer' onClick={()=>this.toPage(page+1)}>»</div>
+                        </li>
+                    )}
+                </ul>
+                <div className='mr-3'>
+                    Showing <b>{(page-1)*size + 1} to {(page-1)*size + jobs.length}</b> of {count}
                 </div>
             </div>
         )
@@ -221,14 +284,19 @@ class JobAnalytics extends React.Component{
         const {sorting} = this.state;
         const {jobId} = match.params;
         const provider = providers.find(p => p.id === parseInt(jobId));
+        const {page} = this.props;
+        const size = this.state.filters.page_size || 100;
+        const offset = (page - 1) * size;
         return (
             <div className='m-3 shadow'>
                 <h4 className='text-center p-2 m-0'>{provider?provider.name:'All '} Jobs</h4>
                 <div style={{borderTop: '1px solid rgba(221, 221, 221, 0.22)'}}>
                     {this.renderFilters()}
                 </div>
+                {this.renderPagination()}
                 <div style={{opacity: isLoading?0.5:1}}>
                     <JobListing
+                        offset={offset}
                         jobs={jobs}
                         updateSort={(sortBy, order)=>this.setState({sorting: {sortBy, order}})}
                         sorting={sorting}
@@ -242,6 +310,8 @@ class JobAnalytics extends React.Component{
 function mapStateTopProps(state){
     return {
         jobs: state.jobs.data,
+        count: state.jobs.count,
+        page: state.jobs.page,
         tags: state.tags.data,
         cities: state.cities.data,
         providers: state.providers.data,

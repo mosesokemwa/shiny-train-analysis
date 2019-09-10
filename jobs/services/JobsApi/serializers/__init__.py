@@ -69,6 +69,8 @@ class JobsApiSerializer:
         organization=filters.get("organization",default=None)
         technologies=filters.getlist("tags[]",default=None)
         provider_id = filters.get("provider_id",default=None)
+        page_size = int(filters.get("page_size", default=100))
+        page = int(filters.get("page", default=1))
         sortable_fields={'id':'job.id', 'title':'job.title', 'organization':'hiring_organization.name',
                         'cities':'job.city', 'type':'job.employment_type', 'posted':'job.date_posted', 'deadline':'job.valid_to'}
         order_options={"asc":"ASC","desc":"DESC"}
@@ -87,6 +89,7 @@ class JobsApiSerializer:
         FROM job_listings job
         INNER JOIN hiring_organizations hiring_organization ON hiring_organization.id = job.hiring_organization_id
         '''
+
         params={}
         sql_filters=[]
         if posted !=None:
@@ -116,8 +119,10 @@ class JobsApiSerializer:
             # @todo find a better method
             for i,tech in enumerate(technologies):
                 if type(tech)==str and tech !="":
-                    tech_filters.append(" job.technologies @> %("+"tech"+str(i)+")s::VARCHAR[255]")
-                    params["tech"+str(i)]=[tech.lower()]
+                    # tech_filters.append(" job.technologies @> %("+"tech"+str(i)+")s::VARCHAR[255]")
+                    # params["tech"+str(i)]=[tech.lower()]
+                    tech_filters.append("%("+"tech"+str(i)+")s::VARCHAR = ANY(job.technologies)")
+                    params["tech"+str(i)]=tech.lower()
                     
             tech_sql=" OR ".join(tech_filters)
             sql_filters.append("({tech_sql})".format(tech_sql=tech_sql))
@@ -133,8 +138,18 @@ class JobsApiSerializer:
 
         if len(sql_filters)>0:
             sql+=" WHERE " +" AND ".join([i for i in sql_filters if type(i)==str and i!=""])
-
-
         sql+=" ORDER BY {sort_field} {order}".format(sort_field=sortable_fields[sortBy], order=order_options[orderBy])
-        data= self.db_handler.fetch_dict(sql,params,one=False)
-        return data
+
+        count_sql = f'''SELECT COUNT(job_data) FROM ({sql}) job_data'''
+
+        count = self.db_handler.fetch(count_sql, params, one=True)
+        if count and len(count) == 1:
+            count = count[0]
+
+        sql += " LIMIT {page_size} OFFSET {offset}".format(page_size=page_size, offset=(page - 1) * page_size)
+        # print(sql%params)
+        data = self.db_handler.fetch_dict(sql, params, one=False)
+
+        return {"data":data,"count":count,"page":page}
+
+
